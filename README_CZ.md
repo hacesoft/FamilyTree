@@ -1,7 +1,5 @@
 # Rodokmen 1.0.0 pro Nextcloud
 
-> **Vstupní archiv pro Publisher:** Tento ZIP má výslednou strukturu s jediným kořenovým adresářem aplikace. Neobsahuje NAS nástroje (`install.sh`, `uninstall.sh`, `build-release.sh`, `scripts/`). Návody, které je zmiňují, platí pro samostatný úplný zdrojový repozitář, nikoli pro tento archiv. Podepsaný `.tar.gz` pro App Store vytváří až Hacesoft Publisher.
-
 
 [English](README.md) · [GEDCOM a data](docs/cz/03_DATA.md) · [Instalace](docs/cz/01_INSTALACE.md)
 
@@ -14,11 +12,15 @@ Soukromá aplikace pro tvorbu a sdílení rodokmenů přímo v **Nextcloudu 35**
 
 ## Instalace
 
-Po zveřejnění lze použít Nextcloud App Store. Alternativně rozbalte instalační archiv přímo jako `custom_apps/hc_familytree` a aktivujte aplikaci příkazem `occ app:enable hc_familytree`.
+Nejprve nainstalujte a povolte HC Shared App Core 0.18.8 nebo novější. Na podporovaném Synology NAS s Dockerem rozbalte celý tento projekt **mimo** `custom_apps` a spusťte v jeho kořeni:
 
-Součástí aplikace je nedestruktivní výchozí migrace Nextcloudu v `lib/Migration/` pro osm tabulek Rodokmenu. **Před zveřejněním** je nutné otestovat první instalaci na Nextcloudu 35 a aktualizaci s existujícími daty. Před aktualizací zazálohujte databázi i soubory.
+```sh
+sudo sh install.sh
+```
 
-Vstupní ZIP Publisheru obsahuje jediný kořenový adresář `hc_familytree/`. npm ani Composer nejsou k instalaci potřeba.
+Instalátor používá hotové soubory z `src/`. Pro ruční nasazení na jiném serveru uložte **pouze obsah `src/`** do `custom_apps/hc_familytree/`, nastavte příslušná oprávnění a aktivujte pomocí `occ app:enable hc_familytree` jako uživatel webového serveru.
+
+Aplikace obsahuje nedestruktivní databázovou migraci v `src/lib/Migration/`, která vytváří osm potřebných tabulek, pokud chybějí. Před aktualizací zálohujte databázi i uživatelské soubory. [Podrobný návod](docs/cz/01_INSTALACE.md).
 
 ## Funkce
 
@@ -30,14 +32,10 @@ Vstupní ZIP Publisheru obsahuje jediný kořenový adresář `hc_familytree/`. 
 
 ## Struktura repozitáře
 
-`appinfo/`, `lib/`, `js/`, `css/`, `img/`, `templates/`, `l10n/` tvoří běhovou aplikaci; `docs/` obsahuje veřejnou dokumentaci. Skripty `install.sh`, `uninstall.sh` a `scripts/` jsou volitelné nástroje pro Docker/NAS.
+`src/` obsahuje běhovou aplikaci (`appinfo/`, `lib/`, `js/`, `css/`, `img/`, `templates/`, `l10n/`); `docs/` obsahuje veřejnou dokumentaci. Skripty `install.sh`, `uninstall.sh` a `scripts/` jsou volitelné nástroje pro Docker/NAS.
 
 ## Licence
 
 AGPL-3.0-or-later. Viz [LICENSE](LICENSE) a [úplný text licence](https://www.gnu.org/licenses/agpl-3.0.txt).
 
 Veřejná historie vydání: [CHANGELOG.md](CHANGELOG.md). Český přehled: [CHANGELOG.cs.md](CHANGELOG.cs.md).
-
-## Úplný zdrojový balíček a Hacesoft Publisher
-
-Balíček pro GitHub a instalaci na NAS obsahuje `install.sh`, `uninstall.sh`, `build-release.sh`, adresáře `scripts/`, `docs/` a hotovou aplikaci v `src/`. Pro instalaci na NAS rozbalte celý projekt a v jeho kořeni spusťte `sudo sh install.sh`. Do `custom_apps` se kopíruje pouze běhový obsah `src/`, nikoliv dokumentace projektu a instalační skripty. Publisher následně provede vlastní kontrolu a sestaví distribuční archiv s kořenovým adresářem podle ID aplikace; zdejší zdrojový ZIP není přímo distribuční TAR.GZ.

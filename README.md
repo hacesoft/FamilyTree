@@ -1,7 +1,5 @@
 # FamilyTree 1.0.0 for Nextcloud
 
-> **Publisher input archive:** This ZIP uses the final app-rooted format. NAS deployment helpers (`install.sh`, `uninstall.sh`, `build-release.sh`, `scripts/`) are not included. Any instructions referencing those files apply to the separate full-source GitHub repository, not this archive. The final signed App Store `.tar.gz` is produced by Hacesoft Publisher.
-
 
 [Česky](README_CZ.md) · [User data and GEDCOM](docs/en/03_DATA.md) · [Installation](docs/en/01_INSTALLATION.md)
 
@@ -14,11 +12,15 @@ A private, self-hosted family tree inside **Nextcloud 35**. Manage trees, people
 
 ## Installation
 
-Use the Nextcloud App Store after publication, or install the release archive as `custom_apps/hc_familytree` and enable the app via `occ app:enable hc_familytree`.
+Install and enable HC Shared App Core 0.18.8 or later first. On a supported Synology NAS / Docker deployment, unpack the complete project **outside** `custom_apps` and run from its root:
 
-The application includes a non-destructive Nextcloud baseline migration in `lib/Migration/`, creating the eight FamilyTree tables when missing. **Before publication**, test a fresh Nextcloud 35 installation and an update with existing user data. Back up the database and user files before upgrading.
+```sh
+sudo sh install.sh
+```
 
-The Publisher ZIP has the single root directory `hc_familytree/` and requires no npm or Composer build.
+The installer deploys the ready-to-use application from `src/`. For manual deployment elsewhere, install **only the contents of `src/`** to `custom_apps/hc_familytree/`, set the proper permissions and enable it using `occ app:enable hc_familytree` as the web-server user.
+
+The non-destructive Nextcloud migration in `src/lib/Migration/` creates the eight required tables if missing. Back up the database and user files before updating. [Detailed guide](docs/en/01_INSTALLATION.md).
 
 ## Features
 
@@ -30,14 +32,10 @@ The Publisher ZIP has the single root directory `hc_familytree/` and requires no
 
 ## Repository layout
 
-`appinfo/`, `lib/`, `js/`, `css/`, `img/`, `templates/`, `l10n/` contain the runnable app; `docs/` contains public documentation; optional `install.sh`, `uninstall.sh`, and `scripts/` support Docker/NAS deployments.
+`src/` contains the runnable app (`appinfo/`, `lib/`, `js/`, `css/`, `img/`, `templates/`, `l10n/`); `docs/` contains public documentation; optional `install.sh`, `uninstall.sh`, and `scripts/` support Docker/NAS deployments.
 
 ## License
 
 AGPL-3.0-or-later. See [LICENSE](LICENSE) and the [full license](https://www.gnu.org/licenses/agpl-3.0.txt).
 
 Release history: [CHANGELOG.md](CHANGELOG.md). Czech: [CHANGELOG.cs.md](CHANGELOG.cs.md).
-
-## Full source archive and Hacesoft Publisher
-
-This GitHub/NAS project contains install.sh, uninstall.sh, build-release.sh, scripts/, docs/ and the installable Nextcloud runtime in src/. For NAS installation, extract the entire project and run `sudo sh install.sh` from its root. Do not copy the project root or scripts/ directly into Nextcloud custom_apps; the installer deploys src/. Publisher independently validates this full-source input and builds its own app-ID-rooted, signed distribution archive.
