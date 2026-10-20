@@ -1,0 +1,39 @@
+# Build outputs and development caches
+/release/
+/.build/
+/.cache/
+/.pytest_cache/
+/node_modules/
+/vendor/
+/.idea/
+/.vscode/
+*.log
+*.tmp
+*.bak
+*.orig
+*.swp
+*.zip
+*.tar
+*.tar.gz
+*.7z
+# Credentials and local environments
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.sqlite
+*.sqlite3
+*.sql
+*.sql.gz
+config.php
+secrets.*
+credentials.*
+# User data and imported genealogies
+*.ged
+*.gedcom
+*.gdz
+*.gedzip
