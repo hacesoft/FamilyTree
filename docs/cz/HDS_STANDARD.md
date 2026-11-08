@@ -1,4 +1,4 @@
-# Interní kontrolní postup HDS — FamilyTree 1.1.0
+# Interní kontrolní postup HDS — FamilyTree 1.1.1
 
 **Interní materiál určený pouze pro Publisher / vývojové kontroly, nepatří do veřejného GitHub ZIPu.** Aktuální požadovaný standard: **HDS 1.2.1**; závazný vydávací profil: **Publisher CP21**. Autoritativní verze aplikace je `src/appinfo/info.xml`.
 

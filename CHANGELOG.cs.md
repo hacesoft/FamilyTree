@@ -1,4 +1,13 @@
-## 1.1.0 — 2026-11-08 (příprava zdrojů; zveřejnění v App Storu zatím neprovedeno)
+## 1.1.1 — 2026-11-08
+
+- Opravné vydání po 1.1.0. Aktualizovaná metadata obrázků v Nextcloud App Storu musí být zveřejněna jako nová verze.
+- V `info.xml` jsou přímé GitHub raw odkazy na schválenou grafiku `src/img/app-store.png` a její náhled `src/img/menu-preview.png`, společně se třemi původními snímky aplikace.
+- Schválené ikony, obrázky, databázové schéma, genealogická data, formáty importu a exportu ani chování aplikace se nemění.
+- Sjednoceny verze metadat, JS/CSS souborů, PHP odkazů, balíčků a veřejných instalačních příruček na 1.1.1.
+- Před publikací je stále povinný audit HDS 1.2.1 / Publisher CP21 a podpis balíčku.
+
+## 1.1.0 — 2026-11-08
+- Metadata pro Nextcloud App Store nově uvádějí také původní schválený `src/img/app-store.png` s náhledem `src/img/menu-preview.png`; původní tři screenshoty zůstávají zachovány. Odkazy jsou pevně svázané se skutečnými cestami na GitHubu.
 
 - Dokončena úprava zdrojů pro H05: typové prefixy a jejich legenda v JS/PHP, české popisy funkcí, vstupních parametrů a návratových hodnot. Názvy parametrů tras Nextcloudu a šablonové proměnné zůstaly zachovány jako povinné výjimky. Nezávislé schválení HDS 1.2.1 a Publisherem CP21 dosud neproběhlo.
 - Připraveny stabilní zdroje 1.1.0 z vývojové verze 1.1.0-dev23, beze změny genealogických dat, struktury DB a formátů záloh.

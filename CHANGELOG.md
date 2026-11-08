@@ -1,4 +1,12 @@
-## 1.1.0 — 2026-11-08 (source prepared; App Store publication pending)
+## 1.1.1 — 2026-11-08
+
+- Patch release after 1.1.0, required to publish updated Nextcloud App Store image metadata as a new version.
+- App Store metadata link to the approved `src/img/app-store.png` cover and `src/img/menu-preview.png` thumbnail via direct GitHub raw URLs, alongside three original application screenshots.
+- Approved icon and image bytes, database schema, genealogy data, import/export formats and core application behavior remain unchanged.
+- Aligned `info.xml`, versioned JS/CSS filenames, PHP asset references, package manifests and public installation guides to 1.1.1.
+- The release must still pass the independent HDS 1.2.1 / Publisher CP21 process and be signed before publication.
+
+## 1.1.0 — 2026-11-08
 
 - Completed H05 source-documentation pass: Hungarian-type prefixes and legends for internal JS/PHP variables; Czech descriptions of functions, input parameters and return types. Kept Nextcloud route/template variable names intact as framework-contract exceptions. Independent HDS 1.2.1 and Publisher CP21 release approval is still pending.
 - Prepared stable 1.1.0 source from development baseline 1.1.0-dev23 without changing genealogical data formats or database schema.

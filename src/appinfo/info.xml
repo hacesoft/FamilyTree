@@ -72,7 +72,7 @@ https://github.com/hacesoft/FamilyTree</description>
   <description lang="pt">Guarde a história da sua família no seu Nextcloud. Crie, explore e partilhe árvores genealógicas com fotografias, fontes e notas de investigação. Suporta GEDCOM 7 e GEDZIP.</description>
   <description lang="sk">Uchovávajte rodinnú históriu vo vlastnom Nextcloude. Vytvárajte, prezerajte a zdieľajte rodokmene s fotografiami, prameňmi a výskumnými poznámkami. Podporuje GEDCOM 7 a GEDZIP.</description>
   <description lang="uk">Зберігайте історію родини у власному Nextcloud. Створюйте, переглядайте та діліться родинними деревами з фотографіями, джерелами й дослідницькими нотатками. Підтримує GEDCOM 7 і GEDZIP.</description>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <licence>AGPL-3.0-or-later</licence>
   <author homepage="https://github.com/hacesoft">hacesoft</author>
   <namespace>HcFamilyTree</namespace>
@@ -80,6 +80,7 @@ https://github.com/hacesoft/FamilyTree</description>
   <website>https://github.com/hacesoft/FamilyTree</website>
   <bugs>https://github.com/hacesoft/FamilyTree/issues</bugs>
   <repository>https://github.com/hacesoft/FamilyTree</repository>
+  <screenshot small-thumbnail="https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/menu-preview.png">https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/app-store.png</screenshot>
   <screenshot small-thumbnail="https://raw.githubusercontent.com/hacesoft/FamilyTree/main/docs/images/appstore/01-overview-small.png">https://raw.githubusercontent.com/hacesoft/FamilyTree/main/docs/images/appstore/01-overview.png</screenshot>
   <screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/docs/images/appstore/02-journal.png</screenshot>
   <screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/docs/images/appstore/03-photographs.png</screenshot>

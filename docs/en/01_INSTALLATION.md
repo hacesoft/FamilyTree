@@ -1,6 +1,6 @@
 [Česky](../cz/01_INSTALACE.md)
 
-# Installing FamilyTree 1.1.0
+# Installing FamilyTree 1.1.1
 
 ## 1. Official installation (recommended)
 
@@ -11,7 +11,7 @@
 3. Find **FamilyTree** (`hc_familytree`) and install/enable it: https://apps.nextcloud.com/apps/hc_familytree.
 4. Open it from the Nextcloud navigation menu. Back up the database and files before upgrades.
 
-GitHub provides **source code**, not the primary installation workflow. GitHub source ZIPs and unsigned staging TAR.GZ files are **not** equivalent to the signed package distributed by Nextcloud. Until version 1.1.0 is actually published to the App Store it must not be described as available through that channel.
+GitHub provides **source code**, not the primary installation workflow. GitHub source ZIPs and unsigned staging TAR.GZ files are **not** equivalent to the signed package distributed by Nextcloud. Until version 1.1.1 is actually published to the App Store it must not be described as available through that channel.
 
 ## 2. Development/test installer — Docker / NAS only
 
@@ -38,4 +38,4 @@ On failure it reports diagnostics. For recovery and code backup details see [ins
 
 ## 3. Official publication (release manager)
 
-`sh build-release.sh` produces an **unsigned runtime ZIP** (`release/hc_familytree-1.1.0.zip`) required by Publisher CP21, an unsigned staging TAR.GZ, and exactly one public **`hc_familytree-1.1.0-full-source.zip`** for Publisher CP21. None is a signed App Store release. Following mandatory HDS and CP21 checks, the release manager must use Hacesoft Publisher to sign the installed application code (producing `appinfo/signature.json`), re-pack the final TAR.GZ, sign **the whole TAR.GZ**, and submit the HTTPS download URL and archive signature to the Nextcloud App Store. **Do not publish an unsigned staging artifact.** See [official Nextcloud instructions](https://nextcloudappstore.readthedocs.io/en/latest/developer.html).
+`sh build-release.sh` produces an **unsigned runtime ZIP** (`release/hc_familytree-1.1.1.zip`) required by Publisher CP21, an unsigned staging TAR.GZ, and exactly one public **`hc_familytree-1.1.1-full-source.zip`** for Publisher CP21. None is a signed App Store release. Following mandatory HDS and CP21 checks, the release manager must use Hacesoft Publisher to sign the installed application code (producing `appinfo/signature.json`), re-pack the final TAR.GZ, sign **the whole TAR.GZ**, and submit the HTTPS download URL and archive signature to the Nextcloud App Store. **Do not publish an unsigned staging artifact.** See [official Nextcloud instructions](https://nextcloudappstore.readthedocs.io/en/latest/developer.html).

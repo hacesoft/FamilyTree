@@ -1,4 +1,4 @@
-# Internal HDS release checks — FamilyTree 1.1.0
+# Internal HDS release checks — FamilyTree 1.1.1
 
 **Internal Publisher/developer reference; excluded from public GitHub source releases.** Required baseline: **HDS 1.2.1**, with **Publisher CP21** governing the release workflow. The authoritative application version is `src/appinfo/info.xml`.
 
