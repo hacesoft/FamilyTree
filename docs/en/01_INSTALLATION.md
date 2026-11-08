@@ -1,9 +1,41 @@
 [Česky](../cz/01_INSTALACE.md)
 
-# FamilyTree 1.0.0 installation
+# Installing FamilyTree 1.1.0
 
-**Requirements:** Nextcloud 35 and enabled [Shared App Core](https://github.com/hacesoft/core) 0.18.8 or later.
+## 1. Official installation (recommended)
 
-On a supported Synology NAS / Docker deployment, unpack the entire project outside `custom_apps` and run `sudo sh install.sh` from the project root. The installer uses the ready-to-run application from `src/`. Alternatively deploy **only the contents of `src/`** to `custom_apps/hc_familytree/`, set appropriate permissions and enable the app with `php occ app:enable hc_familytree` as the web-server user.
+**Ordinary users should use Nextcloud Administration → Apps.** Nextcloud retrieves the officially published, cryptographically signed TAR.GZ and checks its integrity. This is the supported path for installation and future updates.
 
-Nextcloud automatically applies the migration in `src/lib/Migration/` and creates missing tables. Back up the Nextcloud database and user files before upgrading.
+1. Use **Nextcloud 35** and an administrator account.
+2. Under **Apps**, install and enable `hc_shared_app_core` **0.18.8 or newer**.
+3. Find **FamilyTree** (`hc_familytree`) and install/enable it: https://apps.nextcloud.com/apps/hc_familytree.
+4. Open it from the Nextcloud navigation menu. Back up the database and files before upgrades.
+
+GitHub provides **source code**, not the primary installation workflow. GitHub source ZIPs and unsigned staging TAR.GZ files are **not** equivalent to the signed package distributed by Nextcloud. Until version 1.1.0 is actually published to the App Store it must not be described as available through that channel.
+
+## 2. Development/test installer — Docker / NAS only
+
+`sudo sh install.sh` is **not intended for normal users**. It is an advanced tool for developers, testers and administrators of a specific Docker-based Nextcloud deployment. Back up the database and attached files first.
+
+Extract the **complete source repository** outside `custom_apps`; from its root run:
+
+```sh
+sudo sh install.sh
+```
+
+This script deploys `src/`, finds the web/cron containers, checks the Shared App Core dependency, validates PHP and schema, and activates the application. It may create missing database structures. It is not a portable generic Nextcloud installer, it does not sign releases, and it is not a replacement for normal Nextcloud updates.
+
+The installer prints **16 progress steps** immediately, for example:
+
+```text
+[01/16] Kontrola opravneni a Dockeru ..... OK
+[02/16] Vyhledani kontejneru Nextcloud ..... OK
+...
+[16/16] Overeni instalovane verze a souhrn ..... OK
+```
+
+On failure it reports diagnostics. For recovery and code backup details see [installer recovery](INSTALLER_RECOVERY.md). `uninstall.sh` is likewise a Docker administrator tool rather than the recommended uninstall path.
+
+## 3. Official publication (release manager)
+
+`sh build-release.sh` produces an **unsigned runtime ZIP** (`release/hc_familytree-1.1.0.zip`) required by Publisher CP21, an unsigned staging TAR.GZ, and exactly one public **`hc_familytree-1.1.0-full-source.zip`** for Publisher CP21. None is a signed App Store release. Following mandatory HDS and CP21 checks, the release manager must use Hacesoft Publisher to sign the installed application code (producing `appinfo/signature.json`), re-pack the final TAR.GZ, sign **the whole TAR.GZ**, and submit the HTTPS download URL and archive signature to the Nextcloud App Store. **Do not publish an unsigned staging artifact.** See [official Nextcloud instructions](https://nextcloudappstore.readthedocs.io/en/latest/developer.html).

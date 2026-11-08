@@ -1,0 +1,5 @@
+# FamilyTree research journal and one-time migration
+
+This development release uses one clean baseline (13 tables) and native ZIP `formatVersion: 2` without backwards compatibility. Before installation, back up MariaDB and the Nextcloud Files directory containing genealogy attachments. Install the Full Source release; it adds missing tables and nullable `stable_id` columns, preserving existing rows. Run `scripts/migrate-research-v2.php` inside `nextcloud-app` as `www-data`, first in dry-run mode and then explicitly with `--apply`. See `docs/cz/MIGRACE_VYZKUM_V2.md` for exact Docker commands.
+
+New pages: Tasks, Searches, Evidence, Proposals, Change history. Proposals require verified linked evidence before approval. All changes must be reviewed; unverified candidates are never automatically promoted to facts. Backups include all 13 tables and their local attachments; GEDCOM remains a separate lossy interchange export. Changes predating this release cannot be retroactively reconstructed from the current database alone. Reversion is limited to safe, conflict-free person data edits, never destructive deletes.

@@ -1,1 +1,304 @@
-(function(u){"use strict";const S=(e,r)=>{const a=c=>{const o=/^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/.exec(c);return o?[Number(o[1]),Number(o[2]),Number(o[3])]:null},t=a(e),l=a(r);if(!t||!l)return!1;for(let c=0;c<3;c+=1){const o=t[c]??0,p=l[c]??0;if(o>p)return!0;if(o<p)return!1}return!0},b=e=>new Promise(r=>window.setTimeout(r,e)),m=(e,r)=>{const a=new URL(e,window.location.href);return a.searchParams.set("v",r),a.toString()},v=e=>new Promise((r,a)=>{const t=document.createElement("script");t.src=e,t.defer=!0,t.addEventListener("load",()=>r(),{once:!0}),t.addEventListener("error",()=>a(new Error("Script load failed.")),{once:!0}),document.head.append(t)}),k=e=>new Promise((r,a)=>{const t=document.createElement("link");t.rel="stylesheet",t.href=e,t.addEventListener("load",()=>r(),{once:!0}),t.addEventListener("error",()=>a(new Error("Stylesheet load failed.")),{once:!0}),document.head.append(t)}),L=e=>{if(e.element.dataset.coreGuardState!=="checking")return;const r=document.createElement("section");r.className="hc-shared-app-core-guard-loading",r.setAttribute("role","status"),r.setAttribute("aria-live","polite");const a=document.createElement("span");a.className="hc-shared-app-core-guard-loading__spinner",a.setAttribute("aria-hidden","true");const t=document.createElement("span");t.textContent=window.t("hc_familytree","Spouštím aplikaci…"),r.append(a,t),e.element.replaceChildren(r)},w=(e,r,a,t)=>{const l=document.createElement("section");l.className="hc-shared-app-core-guard",l.setAttribute("role","alert");const c=document.createElement("h1");c.textContent=r;const o=document.createElement("p");o.textContent=a;const p=document.createElement("div");p.className="hc-shared-app-core-guard__actions";const i=document.createElement("a");i.href=t,i.target="_blank",i.rel="noopener noreferrer",i.textContent=window.t("hc_familytree","Stáhnout Shared App Core");const s=document.createElement("button");s.type="button",s.textContent=window.t("hc_familytree","Zkusit znovu"),s.addEventListener("click",()=>window.location.reload()),p.append(i,s),l.append(c,o,p),e.element.dataset.coreGuardState="failed",e.element.setAttribute("aria-busy","false"),e.element.replaceChildren(l)},A=async e=>{const r=Math.max(1,e.attempts??5),a=Math.max(100,e.retryDelayMs??800),t=Math.max(1,e.staleVersionAttempts??30),l=Math.max(250,e.staleVersionRetryDelayMs??2e3),c=Math.max(0,e.loadingDelayMs??600),o=Math.max(1,e.requiredApiVersion??1);e.element.dataset.coreGuardState="checking",e.element.setAttribute("aria-busy","true");const p=window.setTimeout(()=>L(e),c),i=()=>window.clearTimeout(p);let s=null,y=0,V=0;for(;;){let d=null;try{const U=new URL(e.statusUrl,window.location.href);U.searchParams.set("_guard",String(Date.now()));const E=await fetch(U.toString(),{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json"}});if(E.ok){const h=await E.json();h.app==="hc_shared_app_core"&&h.contract==="hc-shared-app-core-v1"&&h.version&&(d=h)}}catch{}if(d?.version){if(s=d,S(d.version,e.requiredVersion)||(V+=1,V>=t))break;await b(l);continue}if(y+=1,y>=r)break;await b(a*y)}if(!s?.version)return i(),w(e,e.appName+window.t("hc_familytree"," nelze spustit"),window.t("hc_familytree","Aplikace nemůže pokračovat, protože Shared App Core není nainstalované, povolené nebo neodpovídá."),e.downloadUrl),!1;if(!S(s.version,e.requiredVersion))return i(),w(e,window.t("hc_familytree","Shared App Core je zastaralé"),window.t("hc_familytree","{name} vyžaduje Core {required} nebo novější. Nainstalováno je {installed}.",{name:e.appName,required:e.requiredVersion,installed:s.version}),s.downloadUrl??e.downloadUrl),!1;try{await Promise.all([k(m(e.coreStyleUrl,s.version)),v(m(e.coreScriptUrl,s.version))]);const d=window.HcSharedAppCore;if(!d||d.version!==s.version||d.apiVersion!==(s.apiVersion??o)||d.apiVersion<o)throw new Error("Core frontend and backend contract mismatch.");return await v(m(e.appScriptUrl,e.appVersion??e.requiredVersion)),i(),e.element.dataset.coreGuardState="ready",e.element.setAttribute("aria-busy","false"),!0}catch{return i(),w(e,e.appName+window.t("hc_familytree"," nelze spustit"),window.t("hc_familytree","Požadované soubory aplikace nebo Shared App Core se nepodařilo načíst."),e.downloadUrl),!1}},n=document.querySelector("[data-hc-shared-app-core-guard]");return n&&A({element:n,appName:n.dataset.appName??window.t("hc_familytree","Aplikaci"),appVersion:n.dataset.appVersion,requiredVersion:n.dataset.requiredCoreVersion??"0.1.0",statusUrl:n.dataset.coreStatusUrl??"",coreStyleUrl:n.dataset.coreStyleUrl??"",coreScriptUrl:n.dataset.coreScriptUrl??"",appScriptUrl:n.dataset.appScriptUrl??"",downloadUrl:n.dataset.coreDownloadUrl??"https://github.com/hacesoft/core",loadingDelayMs:Number(n.dataset.coreLoadingDelayMs??600),staleVersionAttempts:Number(n.dataset.coreStaleVersionAttempts??30),staleVersionRetryDelayMs:Number(n.dataset.coreStaleVersionRetryDelayMs??2e3),requiredApiVersion:Number(n.dataset.requiredCoreApiVersion??1)}),u.isVersionAtLeast=S,u.startCoreGuard=A,u.withVersion=m,Object.defineProperty(u,Symbol.toStringTag,{value:"Module"}),u})({});
+/**
+ * @file Hlídání dostupnosti a kompatibility Hacesoft Shared App Core.
+ * Spouští aplikaci až po ověření backendu a načtení odpovídajících assetů.
+ *
+ * Použité prefixy maďarské notace - Hungarian notation:
+ * - o = objekt (object); např. oStatus, oOptions, oElement.
+ * - s = řetězec (string); např. sVersion, sUrl.
+ * - n = číslo (number); např. nAttempt, nDelay.
+ * - b = logická hodnota (boolean); např. bCompatible.
+ * - fn = funkce / callback (function); např. fnResolve.
+ */
+(/** @h05-inline
+ * @brief Provede vloženou callback operaci ve zpracovávaném rodokmenu.
+ * @returns {unknown} Výsledná hodnota nebo dokončení callbacku.
+ */
+function () {
+    'use strict';
+
+    const sAPPID = 'hc_familytree';
+
+    //*************************************************************************
+    /**
+     * @brief Porovná dvě verze ve formátu major.minor.patch.
+     * @param {string} sVersion Skutečná verze nainstalovaného Core.
+     * @param {string} sRequired Požadovaná minimální verze Core.
+     * @returns {boolean} True, pokud je instalovaná verze dostatečně nová.
+     */
+    function isVersionAtLeast(sVersion, sRequired) {
+        /**
+         * @brief Rozloží číslo verze do tří číselných složek.
+         * @param {string} sValue Verze v textovém formátu.
+         * @returns {number[]|null} Trojice čísel, nebo null pro neplatnou verzi.
+         */
+        function parseVersion(sValue) {
+            const oMatch = /^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/.exec(sValue);
+            return oMatch ? [Number(oMatch[1]), Number(oMatch[2]), Number(oMatch[3])] : null;
+        }
+        const aInstalled = parseVersion(sVersion);
+        const aRequired = parseVersion(sRequired);
+        if (!aInstalled || !aRequired) return false;
+        for (let nIndex = 0; nIndex < 3; nIndex += 1) {
+            if (aInstalled[nIndex] > aRequired[nIndex]) return true;
+            if (aInstalled[nIndex] < aRequired[nIndex]) return false;
+        }
+        return true;
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Počká zadaný počet milisekund před dalším pokusem o připojení.
+     * @param {number} nDelay Čekání v milisekundách.
+     * @returns {Promise<void>} Příslib dokončeného čekání.
+     */
+    function delay(nDelay) {
+        return new Promise(/** @h05-inline
+ * @brief Provede vloženou callback operaci ve zpracovávaném rodokmenu.
+ * @param {Function} fnResolve Hodnota fnResolve předaná callbacku.
+ * @returns {unknown} Výsledná hodnota nebo dokončení callbacku.
+ */
+fnResolve => window.setTimeout(fnResolve, nDelay));
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Přidá k URL verzi pro správnou invalidaci cache prohlížeče.
+     * @param {string} sUrl Původní adresa assetu.
+     * @param {string} sVersion Verze assetu.
+     * @returns {string} URL s parametrem v.
+     */
+    function withVersion(sUrl, sVersion) {
+        const oUrl = new URL(sUrl, window.location.href);
+        oUrl.searchParams.set('v', sVersion);
+        return oUrl.toString();
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Asynchronně připojí JavaScriptový soubor do dokumentu.
+     * @param {string} sUrl Adresa JavaScriptového souboru.
+     * @returns {Promise<void>} Příslib dokončení, odmítne se při chybě načtení.
+     */
+    function loadScript(sUrl) {
+        return new Promise(/** @h05-inline
+ * @brief Provede vloženou callback operaci ve zpracovávaném rodokmenu.
+ * @param {Function} fnResolve Hodnota fnResolve předaná callbacku.
+ * @param {Function} fnReject Hodnota fnReject předaná callbacku.
+ * @returns {unknown} Výsledná hodnota nebo dokončení callbacku.
+ */
+(fnResolve, fnReject) => {
+            const oScript = document.createElement('script');
+            oScript.src = sUrl;
+            oScript.defer = true;
+            oScript.addEventListener('load', /** @h05-inline
+ * @brief Obslouží uživatelskou událost a aktualizuje příslušný stav.
+ * @returns {void} Výsledná hodnota nebo dokončení callbacku.
+ */
+() => fnResolve(), { once: true });
+            oScript.addEventListener('error', /** @h05-inline
+ * @brief Obslouží uživatelskou událost a aktualizuje příslušný stav.
+ * @returns {void} Výsledná hodnota nebo dokončení callbacku.
+ */
+() => fnReject(new Error('Script load failed.')), { once: true });
+            document.head.append(oScript);
+        });
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Asynchronně připojí stylový soubor do dokumentu.
+     * @param {string} sUrl Adresa CSS souboru.
+     * @returns {Promise<void>} Příslib dokončení, odmítne se při chybě načtení.
+     */
+    function loadStylesheet(sUrl) {
+        return new Promise(/** @h05-inline
+ * @brief Provede vloženou callback operaci ve zpracovávaném rodokmenu.
+ * @param {Function} fnResolve Hodnota fnResolve předaná callbacku.
+ * @param {Function} fnReject Hodnota fnReject předaná callbacku.
+ * @returns {unknown} Výsledná hodnota nebo dokončení callbacku.
+ */
+(fnResolve, fnReject) => {
+            const oLink = document.createElement('link');
+            oLink.rel = 'stylesheet';
+            oLink.href = sUrl;
+            oLink.addEventListener('load', /** @h05-inline
+ * @brief Obslouží uživatelskou událost a aktualizuje příslušný stav.
+ * @returns {void} Výsledná hodnota nebo dokončení callbacku.
+ */
+() => fnResolve(), { once: true });
+            oLink.addEventListener('error', /** @h05-inline
+ * @brief Obslouží uživatelskou událost a aktualizuje příslušný stav.
+ * @returns {void} Výsledná hodnota nebo dokončení callbacku.
+ */
+() => fnReject(new Error('Stylesheet load failed.')), { once: true });
+            document.head.append(oLink);
+        });
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Zobrazí indikátor spouštění, pokud kontrola Core stále probíhá.
+     * @param {object} oOptions Nastavení Guardu včetně kořenového elementu.
+     * @returns {void} Změní obsah DOM, nevrací hodnotu.
+     */
+    function showLoading(oOptions) {
+        if (oOptions.element.dataset.coreGuardState !== 'checking') return;
+        const oSection = document.createElement('section');
+        oSection.className = 'hc-shared-app-core-guard-loading';
+        oSection.setAttribute('role', 'status');
+        oSection.setAttribute('aria-live', 'polite');
+        const oSpinner = document.createElement('span');
+        oSpinner.className = 'hc-shared-app-core-guard-loading__spinner';
+        oSpinner.setAttribute('aria-hidden', 'true');
+        const oLabel = document.createElement('span');
+        oLabel.textContent = window.t(sAPPID, 'Starting app…');
+        oSection.append(oSpinner, oLabel);
+        oOptions.element.replaceChildren(oSection);
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Zobrazí informaci o selhání, odkaz na Core a tlačítko pro opakování.
+     * @param {object} oOptions Nastavení Guardu a kořenový element.
+     * @param {string} sTitle Nadpis chyby.
+     * @param {string} sMessage Podrobný popis problému.
+     * @param {string} sDownloadUrl Adresa potřebné verze Core.
+     * @returns {void} Nahradí obsah aplikace chybovým panelem.
+     */
+    function showFailure(oOptions, sTitle, sMessage, sDownloadUrl) {
+        const oSection = document.createElement('section');
+        oSection.className = 'hc-shared-app-core-guard';
+        oSection.setAttribute('role', 'alert');
+        const oHeading = document.createElement('h1');
+        oHeading.textContent = sTitle;
+        const oDetail = document.createElement('p');
+        oDetail.textContent = sMessage;
+        const oActions = document.createElement('div');
+        oActions.className = 'hc-shared-app-core-guard__actions';
+        const oDownload = document.createElement('a');
+        oDownload.href = sDownloadUrl;
+        oDownload.target = '_blank';
+        oDownload.rel = 'noopener noreferrer';
+        oDownload.textContent = window.t(sAPPID, 'Download Shared App Core');
+        const oRetry = document.createElement('button');
+        oRetry.type = 'button';
+        oRetry.textContent = window.t(sAPPID, 'Try again');
+        oRetry.addEventListener('click', /** @h05-inline
+ * @brief Obslouží uživatelskou událost a aktualizuje příslušný stav.
+ * @returns {void} Výsledná hodnota nebo dokončení callbacku.
+ */
+() => window.location.reload());
+        oActions.append(oDownload, oRetry);
+        oSection.append(oHeading, oDetail, oActions);
+        oOptions.element.dataset.coreGuardState = 'failed';
+        oOptions.element.setAttribute('aria-busy', 'false');
+        oOptions.element.replaceChildren(oSection);
+    }
+
+    //*************************************************************************
+    /**
+     * @brief Ověří verzi Core, načte kompatibilní assety a následně spustí aplikaci.
+     * @param {object} oOptions Guard konfigurace z data-* atributů, včetně verzí a URL.
+     * @returns {Promise<boolean>} True po úspěšném startu, false při chybě.
+     */
+    async function startCoreGuard(oOptions) {
+        const nAttempts = Math.max(1, oOptions.attempts ?? 5);
+        const nRetryDelay = Math.max(100, oOptions.retryDelayMs ?? 800);
+        const nStaleAttempts = Math.max(1, oOptions.staleVersionAttempts ?? 30);
+        const nStaleRetryDelay = Math.max(250, oOptions.staleVersionRetryDelayMs ?? 2000);
+        const nLoadingDelay = Math.max(0, oOptions.loadingDelayMs ?? 600);
+        const nRequiredApiVersion = Math.max(1, oOptions.requiredApiVersion ?? 1);
+        oOptions.element.dataset.coreGuardState = 'checking';
+        oOptions.element.setAttribute('aria-busy', 'true');
+        const nLoadingTimer = window.setTimeout(/** @h05-inline
+ * @brief Provede odloženou akci po uplynutí požadovaného intervalu.
+ * @returns {void} Výsledná hodnota nebo dokončení callbacku.
+ */
+() => showLoading(oOptions), nLoadingDelay);
+        /**
+ * @brief Zruší přechodový stav načítání a vyčistí související indikátor.
+ * @returns {unknown} Výsledek uvedené operace nebo informace o jejím dokončení.
+ */
+const fnClearLoading = () => window.clearTimeout(nLoadingTimer);
+        let oStatus = null;
+        let nAttempt = 0;
+        let nStaleAttempt = 0;
+        for (;;) {
+            let oFound = null;
+            try {
+                const oStatusUrl = new URL(oOptions.statusUrl, window.location.href);
+                oStatusUrl.searchParams.set('_guard', String(Date.now()));
+                const oResponse = await fetch(oStatusUrl.toString(), {
+                    credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' }
+                });
+                if (oResponse.ok) {
+                    const oData = await oResponse.json();
+                    if (oData.app === 'hc_shared_app_core' && oData.contract === 'hc-shared-app-core-v1' && oData.version) {
+                        oFound = oData;
+                    }
+                }
+            } catch { /* Dočasná chyba při čekání na připravenost serveru. */ }
+            if (oFound?.version) {
+                oStatus = oFound;
+                if (isVersionAtLeast(oFound.version, oOptions.requiredVersion) || ++nStaleAttempt >= nStaleAttempts) break;
+                await delay(nStaleRetryDelay);
+                continue;
+            }
+            if (++nAttempt >= nAttempts) break;
+            await delay(nRetryDelay * nAttempt);
+        }
+        if (!oStatus?.version) {
+            fnClearLoading();
+            showFailure(oOptions, oOptions.appName + window.t(sAPPID, ' cannot be started'),
+                window.t(sAPPID, 'The app cannot continue because Shared App Core is missing, disabled, or incompatible.'), oOptions.downloadUrl);
+            return false;
+        }
+        if (!isVersionAtLeast(oStatus.version, oOptions.requiredVersion)) {
+            fnClearLoading();
+            showFailure(oOptions, window.t(sAPPID, 'Shared App Core is outdated'),
+                window.t(sAPPID, '{name} requires Core {required} or newer. Installed: {installed}.', {
+                    name: oOptions.appName, required: oOptions.requiredVersion, installed: oStatus.version
+                }), oStatus.downloadUrl ?? oOptions.downloadUrl);
+            return false;
+        }
+        try {
+            await Promise.all([
+                loadStylesheet(withVersion(oOptions.coreStyleUrl, oStatus.version)),
+                loadScript(withVersion(oOptions.coreScriptUrl, oStatus.version))
+            ]);
+            const oCore = window.HcSharedAppCore;
+            if (!oCore || oCore.version !== oStatus.version || oCore.apiVersion !== (oStatus.apiVersion ?? nRequiredApiVersion) || oCore.apiVersion < nRequiredApiVersion) {
+                throw new Error('Core frontend and backend contract mismatch.');
+            }
+            await loadScript(withVersion(oOptions.appScriptUrl, oOptions.appVersion ?? oOptions.requiredVersion));
+            fnClearLoading();
+            oOptions.element.dataset.coreGuardState = 'ready';
+            oOptions.element.setAttribute('aria-busy', 'false');
+            return true;
+        } catch {
+            fnClearLoading();
+            showFailure(oOptions, oOptions.appName + window.t(sAPPID, ' cannot be started'),
+                window.t(sAPPID, 'Required application or Shared App Core files could not be loaded.'), oOptions.downloadUrl);
+            return false;
+        }
+    }
+
+    const oRoot = document.querySelector('[data-hc-shared-app-core-guard]');
+    if (oRoot) {
+        startCoreGuard({
+            element: oRoot,
+            appName: oRoot.dataset.appName ?? window.t(sAPPID, 'the app'),
+            appVersion: oRoot.dataset.appVersion,
+            requiredVersion: oRoot.dataset.requiredCoreVersion ?? '0.1.0',
+            statusUrl: oRoot.dataset.coreStatusUrl ?? '',
+            coreStyleUrl: oRoot.dataset.coreStyleUrl ?? '',
+            coreScriptUrl: oRoot.dataset.coreScriptUrl ?? '',
+            appScriptUrl: oRoot.dataset.appScriptUrl ?? '',
+            downloadUrl: oRoot.dataset.coreDownloadUrl ?? 'https://github.com/hacesoft/core',
+            loadingDelayMs: Number(oRoot.dataset.coreLoadingDelayMs ?? 600),
+            staleVersionAttempts: Number(oRoot.dataset.coreStaleVersionAttempts ?? 30),
+            staleVersionRetryDelayMs: Number(oRoot.dataset.coreStaleVersionRetryDelayMs ?? 2000),
+            requiredApiVersion: Number(oRoot.dataset.requiredCoreApiVersion ?? 1)
+        });
+    }
+})();

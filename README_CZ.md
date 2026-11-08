@@ -1,41 +1,66 @@
-# Rodokmen 1.0.0 pro Nextcloud
+# Rodokmen (FamilyTree) 1.1.0 pro Nextcloud
 
+[English](README.md) · [Instalace](docs/cz/01_INSTALACE.md) · [Import, export a záloha](docs/cz/IMPORT_EXPORT_ZALOHA.md) · [Změny](CHANGELOG.cs.md)
 
-[English](README.md) · [GEDCOM a data](docs/cz/03_DATA.md) · [Instalace](docs/cz/01_INSTALACE.md)
+**Rodokmen / FamilyTree** je genealogická aplikace pro vlastní **Nextcloud 35**. Spravuje rodokmeny, osoby, vztahy, události, fotografie, dokumenty, prameny a výzkumný deník. Podporuje import GEDCOM 7 / GEDZIP a sdílení s uživateli Nextcloudu.
 
-Soukromá aplikace pro tvorbu a sdílení rodokmenů přímo v **Nextcloudu 35**. Správa osob, vztahů, událostí, fotografií, dokumentů a poznámek. Podporuje import **FamilySearch GEDCOM 7** (`.ged`) a GEDZIP (`.gdz`) včetně pramenů, citací, badatelských poznámek a obrázků.
+![Rodokmen — hlavní obrazovka aplikace](docs/images/appstore/01-overview.png)
+
+## Doporučená instalace — pro běžné uživatele
+
+**Primární a doporučený způsob je instalace oficiálního podepsaného vydání přímo z katalogu Aplikace v Nextcloudu.** Neinstalujte běžně aplikaci ze zdrojového ZIPu na GitHubu.
+
+1. Přihlaste se do Nextcloudu jako správce a otevřete **Aplikace**.
+2. Nejdříve nainstalujte a povolte **Hacesoft Shared App Core** (`hc_shared_app_core`) verze **0.18.8 nebo novější**.
+3. Vyhledejte **FamilyTree (Rodokmen)**, zvolte **Stáhnout a povolit** a otevřete aplikaci z navigace.
+4. Další aktualizace provádějte pomocí správy aplikací Nextcloudu; předem zálohujte databázi a soubory.
+
+Nextcloud App Store: https://apps.nextcloud.com/apps/hc_familytree
+
+Oficiální vydání zveřejněné v Nextcloud App Storu je **kryptograficky podepsaný archiv TAR.GZ**. Nextcloud jej stáhne a ověří v rámci správy aplikací. Veřejný **full-source.zip** slouží ke zveřejnění kompletních zdrojových kódů, **není podepsaným instalačním balíčkem**. Nepublikujte nepodepsaný TAR.GZ jako oficiální vydání.
 
 ## Požadavky
 
-- Nextcloud 35 a jím podporovaná verze PHP
-- [Shared App Core](https://github.com/hacesoft/core) (`hc_shared_app_core`) **0.18.8 nebo novější**; nainstalovat a povolit předem
+- Nextcloud **35** (rozsah kompatibility uvedený v `src/appinfo/info.xml`)
+- PHP a prostředí podporované nainstalovaným Nextcloudem
+- Povolená aplikace Hacesoft Shared App Core (`hc_shared_app_core`) **0.18.8+**
 
-## Instalace
+## Pouze pro vývojáře a testery
 
-Nejprve nainstalujte a povolte HC Shared App Core 0.18.8 nebo novější. Na podporovaném Synology NAS s Dockerem rozbalte celý tento projekt **mimo** `custom_apps` a spusťte v jeho kořeni:
+Součástí zdrojů je `install.sh` pro **konkrétní prostředí Docker/Synology** s přístupnými kontejnery Nextcloudu. **Není určen pro běžné uživatele**, nejde o univerzální linuxový instalátor ani o alternativu podepsaného vydání z App Storu.
+
+Vývojář nebo tester může celý zdrojový projekt rozbalit **mimo** `custom_apps` a v jeho kořeni spustit:
 
 ```sh
 sudo sh install.sh
 ```
 
-Instalátor používá hotové soubory z `src/`. Pro ruční nasazení na jiném serveru uložte **pouze obsah `src/`** do `custom_apps/hc_familytree/`, nastavte příslušná oprávnění a aktivujte pomocí `occ app:enable hc_familytree` jako uživatel webového serveru.
+Skript nasazuje obsah `src/` do kontejnerů, kontroluje závislosti, verzi, PHP a databázovou strukturu; instalace může měnit aplikační kód a doplňovat databázové schéma. **Předem zálohujte databázi a soubory.** Pro správu standardní instalace z App Storu tento skript běžně nepoužívejte. Podrobnosti a obnova po chybě: [instalace pro testery](docs/cz/01_INSTALACE.md).
 
-Aplikace obsahuje nedestruktivní databázovou migraci v `src/lib/Migration/`, která vytváří osm potřebných tabulek, pokud chybějí. Před aktualizací zálohujte databázi i uživatelské soubory. [Podrobný návod](docs/cz/01_INSTALACE.md).
+Také `uninstall.sh` je specializovaný nástroj pro vývojáře/správce v tomto Docker prostředí. Běžná odinstalace se provádí ve správě aplikací Nextcloudu.
 
 ## Funkce
 
-- Interaktivní strom, přiblížení, posouvání, rozmístění osob, vrácení a opakování změn
-- Osoby, vztahy, události, prameny, badatelské záznamy, fotografie a přílohy
-- Import GEDCOM 7 / GEDZIP s náhledem, kontrolou provenience a porovnáním podle UID
-- Sdílení s oprávněními, české a anglické rozhraní, mobilní rozložení
-- Data zůstávají na vlastním Nextcloud serveru
+- Interaktivní rodokmeny: posouvání, přibližování, osoby, příbuzenské vztahy, události a poznámky
+- Import GEDCOM 7 (`.ged`), GEDZIP (`.gdz`); vlastní úplná záloha a obnova ZIP
+- Fotografie, dokumenty, prameny, citace a badatelský deník s úkoly, hledáním a důkazy
+- Sdílení s kontrolou přístupových práv uživatelů Nextcloudu
+- Responzivní rozhraní a katalogy 11 jazyků; výchozí jazyk a záložní překlad jsou anglické
 
-## Struktura repozitáře
+## Data a dokumentace
 
-`src/` obsahuje běhovou aplikaci (`appinfo/`, `lib/`, `js/`, `css/`, `img/`, `templates/`, `l10n/`); `docs/` obsahuje veřejnou dokumentaci. Skripty `install.sh`, `uninstall.sh` a `scripts/` jsou volitelné nástroje pro Docker/NAS.
+- [Údaje a výměnné formáty](docs/cz/03_DATA.md)
+- [Vlastní ZIP v2 a obnova vs. GEDCOM](docs/cz/IMPORT_EXPORT_ZALOHA.md)
+- [Formáty importu a exportu](docs/cz/FORMATY_IMPORT_EXPORT.md)
+- [Shared App Core](docs/cz/02_CORE.md)
+- [Obrázky pro App Store](docs/cz/OBRAZKY_APPSTORE.md)
 
-## Licence
+Vlastní úplná záloha FamilyTree ZIP není totéž co výměnný formát GEDCOM. Vedle záloh aplikace udržujte i nezávislou zálohu databáze a souborů Nextcloudu.
 
-AGPL-3.0-or-later. Viz [LICENSE](LICENSE) a [úplný text licence](https://www.gnu.org/licenses/agpl-3.0.txt).
+## Struktura repozitáře a vydávání
 
-Veřejná historie vydání: [CHANGELOG.md](CHANGELOG.md). Český přehled: [CHANGELOG.cs.md](CHANGELOG.cs.md).
+Veřejný **GitHub zdrojový ZIP** obsahuje `src/` s úplnou aplikací, veřejné návody v `docs/`, obrázky, licenci, changelogy a potřebné instalační a sestavovací skripty. Záměrně neobsahuje soukromé klíče, konfigurace, interní HDS/CP21 auditní podklady, provozní logy ani testovací protokoly.
+
+Příkaz `sh build-release.sh` vytvoří **nepodepsaný běhový ZIP** (`release/hc_familytree-1.1.0.zip`) požadovaný Publisherem CP21, **nepodepsaný přípravný TAR.GZ** a právě jeden čistý zdrojový archiv **`release/hc_familytree-1.1.0-full-source.zip`**. **Sám nic nepodepisuje ani nezveřejňuje.** Teprve Hacesoft Publisher provede závazné kontroly, podepíše aplikaci certifikátem Nextcloudu a připraví finální TAR.GZ včetně podpisu archivu pro Nextcloud App Store.
+
+**Licence:** [AGPL-3.0-or-later](LICENSE). Chyby hlaste přes [GitHub Issues](https://github.com/hacesoft/FamilyTree/issues).

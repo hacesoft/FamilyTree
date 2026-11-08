@@ -2,6 +2,9 @@
 
 # Rodokmen: opakovatelná instalace na NC35
 
+**Pouze pro vývojáře/testery se specifickým Docker prostředím.** Standardně instalujte podepsané vydání přes **Nextcloud → Aplikace**; viz [instalace](01_INSTALACE.md).
+
+
 Po rozbalení úplného zdrojového balíčku do příslušného adresáře NAS spusťte pouze:
 
 ```sh

@@ -1,0 +1,3 @@
+# Toolbar and legend – FamilyTree 1.1.0-dev9
+
+In application menu ⋯ → Settings → Display, enable the optional tree counts in the main toolbar (off by default). The canvas count badge is no longer displayed. Legend dragging may be enabled or disabled independently (enabled by default); drag the handle ⠿ to free space anywhere inside the application, including the sidebar or toolbar. Its position is saved in this browser's localStorage and constrained to the application bounds on resize. Reset restores its default bottom-right placement. Previous positions are not converted; choose a new legend position once. No changes to genealogy data or backup format.

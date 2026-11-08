@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "standardVersion": "1.2.1",
+  "appId": "hc_familytree",
+  "locales": [
+    "en",
+    "cs",
+    "de",
+    "es",
+    "fr",
+    "it",
+    "nl",
+    "pl",
+    "pt",
+    "sk",
+    "uk"
+  ],
+  "sourceRoot": "src"
+}

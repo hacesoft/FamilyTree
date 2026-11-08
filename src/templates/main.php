@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 use OCP\Util;
 
+// Výjimka H05: $l a $_ jsou pevné proměnné poskytované šablonovým rozhraním Nextcloudu; nepřejmenovávat.
 // Záměrně pouze nezávislý Guard a CSS aplikace. Core ani hlavní JS se zde nenačítají.
 Util::addScript('hc_familytree', 'core-guard');
-Util::addStyle('hc_familytree', 'style-1.0.0');
+Util::addStyle('hc_familytree', 'style-1.1.0');
 ?>
 <div
     id="hc_familytree"
     data-hc-shared-app-core-guard
-    data-app-name="<?php p($l->t('Rodokmen')); ?>"
+    data-app-name="<?php p($l->t('FamilyTree')); ?>"
     data-app-version="<?php p($_['appVersion']); ?>"
+    data-app-language="<?php p($l->getLanguageCode()); ?>"
     data-required-core-version="<?php p($_['requiredCoreVersion']); ?>"
     data-required-core-api-version="<?php p($_['requiredCoreApiVersion']); ?>"
     data-core-loading-delay-ms="600"

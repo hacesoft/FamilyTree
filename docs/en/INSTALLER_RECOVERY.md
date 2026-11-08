@@ -2,6 +2,9 @@
 
 # FamilyTree: repeatable NC35 installation
 
+**For developers/testers on supported Docker deployments only.** Normally install the signed release via **Nextcloud → Apps**; see [installation](01_INSTALLATION.md).
+
+
 Extract the complete source package into the corresponding NAS directory, then run:
 
 ```sh

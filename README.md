@@ -1,41 +1,66 @@
-# FamilyTree 1.0.0 for Nextcloud
+# FamilyTree 1.1.0 for Nextcloud
 
+[Česky](README_CZ.md) · [Installation](docs/en/01_INSTALLATION.md) · [Import, export and backup](docs/en/IMPORT_EXPORT_BACKUP.md) · [Changelog](CHANGELOG.en.md)
 
-[Česky](README_CZ.md) · [User data and GEDCOM](docs/en/03_DATA.md) · [Installation](docs/en/01_INSTALLATION.md)
+**FamilyTree** is a self-hosted genealogy application for **Nextcloud 35**. Create and share family trees, people, relationships and events; manage photos, sources, documents and research notes; import GEDCOM 7 / GEDZIP; and keep your records in your own Nextcloud.
 
-A private, self-hosted family tree inside **Nextcloud 35**. Manage trees, people, relationships, events, photos, documents and notes. Share family trees with authorized Nextcloud users and import **FamilySearch GEDCOM 7** (`.ged`) or GEDZIP (`.gdz`) with source citations, research notes and image attachments.
+![FamilyTree — main family tree view](docs/images/appstore/01-overview.png)
+
+## Installation — recommended for all users
+
+**Install the official, signed release through Nextcloud's Apps interface**, not from this GitHub source archive:
+
+1. In Nextcloud, sign in as an administrator and go to **Apps**.
+2. Install and enable **Hacesoft Shared App Core** (`hc_shared_app_core`) version **0.18.8 or later**.
+3. Find **FamilyTree** (`hc_familytree`) in the app catalog, choose **Download and enable**, and open it in the navigation menu.
+4. For subsequent updates, use Nextcloud's app-update mechanism and back up the database and files before upgrading.
+
+App Store: https://apps.nextcloud.com/apps/hc_familytree
+
+The release published to the Nextcloud App Store is distributed as a **cryptographically signed TAR.GZ archive**. Nextcloud downloads and validates it as part of the supported installation workflow. The public **full-source.zip** contains source files and is **not** the signed installable application. Do not upload a plain, unsigned runtime TAR.GZ as an official release.
 
 ## Requirements
 
-- Nextcloud 35 and its supported PHP runtime
-- [Shared App Core](https://github.com/hacesoft/core) (`hc_shared_app_core`) **0.18.8 or newer** — install and enable it before FamilyTree
+- Nextcloud **35** (the compatibility range currently declared in `src/appinfo/info.xml`)
+- PHP/runtime compatible with the installed Nextcloud server
+- Hacesoft Shared App Core (`hc_shared_app_core`) **0.18.8+**, installed and enabled
 
-## Installation
+## Development and testing only
 
-Install and enable HC Shared App Core 0.18.8 or later first. On a supported Synology NAS / Docker deployment, unpack the complete project **outside** `custom_apps` and run from its root:
+The repository includes `install.sh` for a **specific Docker/Synology-style deployment** with accessible Nextcloud containers. It is **not** the default installer for end users, not a general Linux installer, and not a substitute for signed App Store releases.
+
+From an extracted *complete source* checkout located **outside** `custom_apps`, a developer/tester can run:
 
 ```sh
 sudo sh install.sh
 ```
 
-The installer deploys the ready-to-use application from `src/`. For manual deployment elsewhere, install **only the contents of `src/`** to `custom_apps/hc_familytree/`, set the proper permissions and enable it using `occ app:enable hc_familytree` as the web-server user.
+The script deploys `src/` into the selected Nextcloud containers, checks the Core dependency, validates code and schema, and can change the application's installation and database structures. Back up your database and files first. Do not use it just to update an App Store installation without understanding the custom deployment workflow. See [developer/test installation and recovery](docs/en/01_INSTALLATION.md).
 
-The non-destructive Nextcloud migration in `src/lib/Migration/` creates the eight required tables if missing. Back up the database and user files before updating. [Detailed guide](docs/en/01_INSTALLATION.md).
+`uninstall.sh` is likewise a **developer/administrator tool** for these Docker layouts, not the recommended uninstall method. Ordinary users should manage installation and removal through Nextcloud Apps.
 
 ## Features
 
-- Interactive family tree with zoom, pan, drag-to-arrange and undo/redo
-- People, relatives, events, sources, research notes, photos and attachments
-- GEDCOM 7 / GEDZIP import with preview, provenance and duplicate protection by UID
-- Permission-aware sharing, Czech and English interface, responsive layout
-- Data remains in the user's own Nextcloud deployment
+- Interactive family trees, pan/zoom, person and relationship editing, events and notes
+- GEDCOM 7 (`.ged`) and GEDZIP (`.gdz`) import, and a versioned native ZIP backup and restore
+- Documents, photographs, source citations and a research journal with tasks, searches and evidence
+- Sharing with Nextcloud users and permission-aware access
+- Responsive UI with English as default/fallback, Czech and nine other locale catalogs
 
-## Repository layout
+## Data and documentation
 
-`src/` contains the runnable app (`appinfo/`, `lib/`, `js/`, `css/`, `img/`, `templates/`, `l10n/`); `docs/` contains public documentation; optional `install.sh`, `uninstall.sh`, and `scripts/` support Docker/NAS deployments.
+- [Import/export formats and data ownership](docs/en/03_DATA.md)
+- [Backup and restore (native ZIP v2 vs. GEDCOM)](docs/en/IMPORT_EXPORT_BACKUP.md)
+- [Research journal JSON interchange](docs/en/RESEARCH_JOURNAL_FORMAT.md)
+- [Shared App Core integration](docs/en/02_CORE.md)
+- [App Store screenshots](docs/en/APPSTORE_SCREENSHOTS.md)
 
-## License
+A native FamilyTree ZIP backup is distinct from GEDCOM exchange. Keep independent backups of the Nextcloud database and stored files before major updates.
 
-AGPL-3.0-or-later. See [LICENSE](LICENSE) and the [full license](https://www.gnu.org/licenses/agpl-3.0.txt).
+## Repository and release artifacts
 
-Release history: [CHANGELOG.md](CHANGELOG.md). Czech: [CHANGELOG.cs.md](CHANGELOG.cs.md).
+The **public GitHub source ZIP** contains `src/` (the complete runnable app), public `docs/`, screenshots, license, changelogs and source deployment/build scripts. It intentionally excludes private keys, credentials, internal HDS/CP21 audit evidence, runtime logs and test reports.
+
+`sh build-release.sh` assembles an **unsigned runtime ZIP** (`release/hc_familytree-1.1.0.zip`) for Publisher CP21, an **unsigned staging TAR.GZ**, and exactly one clean **`release/hc_familytree-1.1.0-full-source.zip`** from this checkout; the build **does not sign or publish** a release. The release manager uses Hacesoft Publisher to run mandatory quality gates, sign the application with the registered Nextcloud certificate, and publish the final TAR.GZ and its archive signature to the App Store. The signed final artifact is not produced by this GitHub source ZIP alone.
+
+**License:** [AGPL-3.0-or-later](LICENSE). Report problems via [GitHub Issues](https://github.com/hacesoft/FamilyTree/issues).

@@ -37,3 +37,6 @@ credentials.*
 *.gedcom
 *.gdz
 *.gedzip
+
+.release-build/
+coverage/

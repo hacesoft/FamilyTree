@@ -166,12 +166,114 @@ $table = $schema->hasTable($prefix . 'hc_familytree_research') ? $schema->getTab
             $addIndex($table, ['tree_id', 'origin_key', 'entity_type', 'external_id'], 'hc_ft_research_origin', true);
 }
 
-$required = [];
-foreach (['hc_familytree_trees', 'hc_familytree_people', 'hc_familytree_relations', 'hc_familytree_events', 'hc_familytree_documents', 'hc_familytree_doc_links', 'hc_familytree_shares', 'hc_familytree_research'] as $logical) {
-    $table = $schema->getTable($prefix . $logical);
-    $required[$logical] = ['columns' => array_keys($table->getColumns()), 'indexes' => array_diff(array_keys($table->getIndexes()), ['primary'])];
+// Baseline v2 fields for existing development installations.
+foreach (['hc_familytree_trees','hc_familytree_people','hc_familytree_relations','hc_familytree_events','hc_familytree_documents','hc_familytree_doc_links','hc_familytree_shares','hc_familytree_research'] as $name) {
+    $table = $schema->getTable($prefix . $name);
+    $addColumn($table, 'stable_id', 'string', ['length'=>64, 'notnull'=>false]);
+    $addIndex($table, ['stable_id'], 'hc_ft_stable_' . substr(md5($name), 0, 8));
+}
+if (!$schema->hasTable($prefix . 'hc_familytree_history')) $changed=true;
+{
+    $table=$schema->hasTable($prefix . 'hc_familytree_history') ? $schema->getTable($prefix . 'hc_familytree_history') : $schema->createTable($prefix . 'hc_familytree_history');
+    $addColumn($table, 'id', 'bigint', ['autoincrement'=>true,'notnull'=>true,'unsigned'=>true]);
+    $addColumn($table, 'tree_id', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'entity_type', 'string', ['notnull'=>false,'length'=>40]);
+    $addColumn($table, 'entity_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'action', 'string', ['notnull'=>false,'length'=>24]);
+    $addColumn($table, 'actor_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'before_json', 'text', ['notnull'=>false]);
+    $addColumn($table, 'after_json', 'text', ['notnull'=>false]);
+    $addColumn($table, 'reason', 'text', ['notnull'=>false]);
+    $addColumn($table, 'created_at', 'bigint', ['notnull'=>false]);
+    $setPrimaryKey($table, ['id']);
+    $addIndex($table, ['tree_id'], 'hc_ft_v2_0_tree');
+}
+if (!$schema->hasTable($prefix . 'hc_familytree_research_tasks')) $changed=true;
+{
+    $table=$schema->hasTable($prefix . 'hc_familytree_research_tasks') ? $schema->getTable($prefix . 'hc_familytree_research_tasks') : $schema->createTable($prefix . 'hc_familytree_research_tasks');
+    $addColumn($table, 'id', 'bigint', ['autoincrement'=>true,'notnull'=>true,'unsigned'=>true]);
+    $addColumn($table, 'tree_id', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'stable_id', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'title', 'string', ['notnull'=>false,'length'=>255]);
+    $addColumn($table, 'status', 'string', ['notnull'=>false,'length'=>32]);
+    $addColumn($table, 'priority', 'string', ['notnull'=>false,'length'=>16]);
+    $addColumn($table, 'hypothesis', 'text', ['notnull'=>false]);
+    $addColumn($table, 'next_action', 'text', ['notnull'=>false]);
+    $addColumn($table, 'person_refs_json', 'text', ['notnull'=>false]);
+    $addColumn($table, 'created_by', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'updated_by', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'created_at', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'updated_at', 'bigint', ['notnull'=>false]);
+    $setPrimaryKey($table, ['id']);
+    $addIndex($table, ['tree_id'], 'hc_ft_v2_1_tree');
+    $addIndex($table, ['stable_id'], 'hc_ft_v2_1_uuid');
+}
+if (!$schema->hasTable($prefix . 'hc_familytree_search_log')) $changed=true;
+{
+    $table=$schema->hasTable($prefix . 'hc_familytree_search_log') ? $schema->getTable($prefix . 'hc_familytree_search_log') : $schema->createTable($prefix . 'hc_familytree_search_log');
+    $addColumn($table, 'id', 'bigint', ['autoincrement'=>true,'notnull'=>true,'unsigned'=>true]);
+    $addColumn($table, 'tree_id', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'stable_id', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'task_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'query_text', 'text', ['notnull'=>false]);
+    $addColumn($table, 'source_url', 'string', ['notnull'=>false,'length'=>1024]);
+    $addColumn($table, 'outcome', 'string', ['notnull'=>false,'length'=>32]);
+    $addColumn($table, 'notes', 'text', ['notnull'=>false]);
+    $addColumn($table, 'actor_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'created_at', 'bigint', ['notnull'=>false]);
+    $setPrimaryKey($table, ['id']);
+    $addIndex($table, ['tree_id'], 'hc_ft_v2_2_tree');
+    $addIndex($table, ['stable_id'], 'hc_ft_v2_2_uuid');
+}
+if (!$schema->hasTable($prefix . 'hc_familytree_evidence')) $changed=true;
+{
+    $table=$schema->hasTable($prefix . 'hc_familytree_evidence') ? $schema->getTable($prefix . 'hc_familytree_evidence') : $schema->createTable($prefix . 'hc_familytree_evidence');
+    $addColumn($table, 'id', 'bigint', ['autoincrement'=>true,'notnull'=>true,'unsigned'=>true]);
+    $addColumn($table, 'tree_id', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'stable_id', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'task_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'status', 'string', ['notnull'=>false,'length'=>24]);
+    $addColumn($table, 'archive', 'string', ['notnull'=>false,'length'=>255]);
+    $addColumn($table, 'signature', 'string', ['notnull'=>false,'length'=>128]);
+    $addColumn($table, 'source_url', 'string', ['notnull'=>false,'length'=>1024]);
+    $addColumn($table, 'image_number', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'transcription', 'text', ['notnull'=>false]);
+    $addColumn($table, 'notes', 'text', ['notnull'=>false]);
+    $addColumn($table, 'confidence_label', 'string', ['notnull'=>false,'length'=>32]);
+    $addColumn($table, 'metadata_json', 'text', ['notnull'=>false]);
+    $addColumn($table, 'created_by', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'created_at', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'updated_at', 'bigint', ['notnull'=>false]);
+    $setPrimaryKey($table, ['id']);
+    $addIndex($table, ['tree_id'], 'hc_ft_v2_3_tree');
+    $addIndex($table, ['stable_id'], 'hc_ft_v2_3_uuid');
+}
+if (!$schema->hasTable($prefix . 'hc_familytree_proposals')) $changed=true;
+{
+    $table=$schema->hasTable($prefix . 'hc_familytree_proposals') ? $schema->getTable($prefix . 'hc_familytree_proposals') : $schema->createTable($prefix . 'hc_familytree_proposals');
+    $addColumn($table, 'id', 'bigint', ['autoincrement'=>true,'notnull'=>true,'unsigned'=>true]);
+    $addColumn($table, 'tree_id', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'stable_id', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'target_type', 'string', ['notnull'=>false,'length'=>32]);
+    $addColumn($table, 'target_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'changes_json', 'text', ['notnull'=>false]);
+    $addColumn($table, 'evidence_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'status', 'string', ['notnull'=>false,'length'=>24]);
+    $addColumn($table, 'reason', 'text', ['notnull'=>false]);
+    $addColumn($table, 'created_by', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'reviewer_uid', 'string', ['notnull'=>false,'length'=>64]);
+    $addColumn($table, 'created_at', 'bigint', ['notnull'=>false]);
+    $addColumn($table, 'reviewed_at', 'bigint', ['notnull'=>false]);
+    $setPrimaryKey($table, ['id']);
+    $addIndex($table, ['tree_id'], 'hc_ft_v2_4_tree');
+    $addIndex($table, ['stable_id'], 'hc_ft_v2_4_uuid');
 }
 
+$required=[];
+foreach (['hc_familytree_trees','hc_familytree_people','hc_familytree_relations','hc_familytree_events','hc_familytree_documents','hc_familytree_doc_links','hc_familytree_shares','hc_familytree_research','hc_familytree_history','hc_familytree_research_tasks','hc_familytree_search_log','hc_familytree_evidence','hc_familytree_proposals'] as $logical) {
+    $table=$schema->getTable($prefix . $logical);
+    $required[$logical]=['columns'=>array_keys($table->getColumns()),'indexes'=>array_diff(array_keys($table->getIndexes()),['primary'])];
+}
 if ($changed) {
     $db->migrateToSchema($schema);
 }
