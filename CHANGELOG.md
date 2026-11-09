@@ -1,3 +1,24 @@
+## 1.1.4 – 2026-11-09
+
+- Přidán nový náhledový a potvrzovaný import dílčích genealogických nálezů do stávajícího rodokmenu.
+- Sloučení podle stabilních ID, bez mazání stávajících osob a bez přepisování konfliktních údajů.
+- GEDZIP, výzkumný deník a archivní snímky ve společném ZIPu; důkazy s auditní historií.
+- Při opakovaném importu deduplikace deníku a archivních souborů.
+
+## 1.1.3 — 2026-11-09
+
+- Aligned App Store image roles with the official Nextcloud Talk pattern: the first original UI screenshot is also the catalog card cover, without a logo-only `small-thumbnail`.
+- Public screenshot URLs now point to the reliable `src/img/` repository location; original approved image bytes remain unchanged and are present in the runtime `img/` as well.
+- Added separate verification of public GitHub image URLs and clarified deployment order; local HDS checks remain mandatory.
+- No changes to genealogical data models, permissions or migrations.
+
+## 1.1.2 — 2026-11-08
+
+- Corrected App Store first screenshot pairing: the approved 512 × 512 branding image now serves only as the app-card `small-thumbnail`, while the gallery opens with the actual family-tree overview.
+- Removed the 64 × 64 preview from App Store metadata without modifying or deleting the approved source image. The other two gallery screenshots remain unchanged.
+- Hardened local asset validation so a tiny preview, wrong screenshot order or incorrect GitHub URL blocks packaging. External App Store image caching still requires a separate post-publication check.
+- No changes to genealogical data, application functionality, approved image bytes or database schema.
+
 ## 1.1.1 — 2026-11-08
 
 - Patch release after 1.1.0, required to publish updated Nextcloud App Store image metadata as a new version.

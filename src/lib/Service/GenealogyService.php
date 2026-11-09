@@ -24,10 +24,11 @@ class GenealogyService {
  * @param NativeArchiveService $oNative Vstupní parametr „native“ pro operaci __construct.
  * @param ResearchJournalService $oJournal Služba výzkumného deníku.
  * @param FamilyTreeStatisticsService $oStatistics Vstupní parametr „statistics“ pro operaci __construct.
- * @param ResearchJournalImportService $oJournalImport Vstupní parametr „journalImport“ pro operaci __construct.
+ * @param ResearchJournalImportService $oJournalImport Import strukturovaného deníku.
+ * @param FindingsMergeService $oFindingsMerge Nedestruktivní slučování nálezů.
  * @return void Konstruktor nevrací návratovou hodnotu.
  */
-public function __construct(private IRequest $oRequest,private IDBConnection $oDb,IUserSession $oUs,private IGroupManager $oGroups,private IUserManager $oUsers,private IL10N $oL10n,private ResearchImportService $oResearch,private NativeArchiveService $oNative,private ResearchJournalService $oJournal,private FamilyTreeStatisticsService $oStatistics,private ResearchJournalImportService $oJournalImport){$this->sUid=$oUs->getUser()?->getUID()??'';}
+public function __construct(private IRequest $oRequest,private IDBConnection $oDb,IUserSession $oUs,private IGroupManager $oGroups,private IUserManager $oUsers,private IL10N $oL10n,private ResearchImportService $oResearch,private NativeArchiveService $oNative,private ResearchJournalService $oJournal,private FamilyTreeStatisticsService $oStatistics,private ResearchJournalImportService $oJournalImport,private FindingsMergeService $oFindingsMerge){$this->sUid=$oUs->getUser()?->getUID()??'';}
  /**
  * @brief Načte seznam databázových záznamů odpovídajících sloupcovým podmínkám.
  * @param string $sTable Název databázové tabulky.
@@ -272,6 +273,26 @@ fn($nA,$aB)=>(int)$aB['updated_at']<=>(int)$nA['updated_at']);return new DataRes
  * @param int $nTreeId Identifikátor rodokmenu.
  * @return Response HTTP odpověď předaná klientovi.
  */
+  /**
+   * @brief Připraví náhled propojení osob, vztahů, důkazů a deníku bez zápisu.
+   * @param int $nTreeId Identifikátor existujícího rodokmenu.
+   * @return Response JSON náhled se seznamem změn, konfliktů a kontrolním hashem.
+   */
+  public function previewFindings(int $nTreeId):Response {
+   if(!$this->can($nTreeId,true))return $this->deny();
+   try{return new DataResponse($this->oFindingsMerge->preview($nTreeId));}
+   catch(\InvalidArgumentException|\JsonException $oError){return new JSONResponse(['error'=>$oError->getMessage()],400);}
+  }
+  /**
+   * @brief Provede výslovně schválené nedestruktivní sloučení do stejného rodokmenu.
+   * @param int $nTreeId Identifikátor existujícího rodokmenu.
+   * @return Response JSON přehled uložených změn a aktualizovaného deníku.
+   */
+  public function applyFindings(int $nTreeId):Response {
+   if(!$this->can($nTreeId,true))return $this->deny();
+   try{return new DataResponse($this->oFindingsMerge->apply($nTreeId,(string)$this->row('hc_familytree_trees',$nTreeId)['owner_uid'],$this->sUid));}
+   catch(\InvalidArgumentException|\JsonException $oError){return new JSONResponse(['error'=>$oError->getMessage()],409);}
+  }
   public function importResearch(int $nTreeId):Response{
    if(!$this->can($nTreeId,true))return $this->deny();
    $aTables=['hc_familytree_people','hc_familytree_relations','hc_familytree_events','hc_familytree_research'];$oPrevious=[];

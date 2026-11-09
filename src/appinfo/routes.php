@@ -27,6 +27,8 @@ return ['routes'=>[
  ['name'=>'genealogy#saveShare','url'=>'/api/trees/{treeId}/shares','verb'=>'POST'],['name'=>'genealogy#deleteShare','url'=>'/api/shares/{id}','verb'=>'DELETE'],
  ['name'=>'genealogy#previewResearchNew','url'=>'/api/import/gedcom/preview','verb'=>'POST'],
  ['name'=>'genealogy#previewResearch','url'=>'/api/trees/{treeId}/research/preview','verb'=>'POST'],
+ ['name'=>'genealogy#previewFindings','url'=>'/api/trees/{treeId}/findings/preview','verb'=>'POST'],
+ ['name'=>'genealogy#applyFindings','url'=>'/api/trees/{treeId}/findings/apply','verb'=>'POST'],
  ['name'=>'genealogy#importResearch','url'=>'/api/trees/{treeId}/research/import','verb'=>'POST'],
  ['name'=>'genealogy#exportGedcom','url'=>'/api/trees/{treeId}/export/gedcom','verb'=>'GET'],
  ['name'=>'genealogy#exportNative','url'=>'/api/backups/native','verb'=>'GET'],

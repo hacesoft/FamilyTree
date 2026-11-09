@@ -1,42 +1,37 @@
-# Obrázky pro Nextcloud App Store
+# Grafika aplikace a Nextcloud App Store – FamilyTree 1.1.3
 
-## Zdrojové soubory
+## Vzor Nextcloud Talk (`spreed`)
 
-Originály jsou součástí úplného zdrojového balíčku v `docs/images/appstore/` a nemají se zbytečně zmenšovat:
+Nextcloud odlišuje **ikonu instalované aplikace** a **screenshoty pro katalog**. Talk má v běhové aplikaci `img/app.svg` (volitelně `img/app-dark.svg`), zatímco v `appinfo/info.xml` používá veřejné HTTPS URL screenshotů. Umístění do `img/` automaticky nezajišťuje jejich zobrazení v katalogu: rozhoduje URL v `<screenshot>`.
 
-| Soubor | Rozměry | Účel |
+## Správné role obrázků FamilyTree
+
+| Role | Soubor | Rozměry |
 | --- | --- | --- |
-| `01-overview.png` | 2044 × 1020 | hlavní přehled rodokmenu |
-| `01-overview-small.png` | 1187 × 715 | dodaný malý náhled prvního snímku |
-| `02-journal.png` | 965 × 820 | výzkumný deník / úkoly |
-| `03-photographs.png` | 968 × 830 | archiv fotografií a skenů |
+| Ikona v Nextcloudu | `src/img/app.svg` → při sestavení `img/app.svg` | SVG |
+| Karta katalogu a první snímek galerie | `src/img/01-overview.png` | 2044 × 1020 |
+| Druhý snímek galerie | `src/img/02-journal.png` | 965 × 820 |
+| Třetí snímek galerie | `src/img/03-photographs.png` | 968 × 830 |
+| Schválená grafika/logo (nepoužívá se jako karta) | `src/img/app-store.png` | 512 × 512 |
+| Schválený malý náhled (nepoužívá se jako karta) | `src/img/menu-preview.png` | 64 × 64 |
 
-## Hlavní obrázek a skutečná galerie
+Kopie screenshotů jsou **bitově totožné** se schválenými originály v `docs/images/appstore/`. Neměnit barvy, velikosti ani obsah. Zdrojové soubory v `src/img/` jsou dostupné v GitHubu na ověřitelných cestách a sestavení je přenáší do běhového `img/`.
 
-Do metadat byla přidána **schválená hlavní grafika aplikace** `src/img/app-store.png` (512 × 512 px):
+V `src/appinfo/info.xml` se používá **první snímek bez `small-thumbnail`**; App Store tak pro kartu použije skutečný barevný screenshot, nikoliv ikonu. Příslušné odkazy:
 
-- Přímý obrázek: `https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/app-store.png`
-- Malý náhled: `https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/menu-preview.png`
+```xml
+<screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/01-overview.png</screenshot>
+<screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/02-journal.png</screenshot>
+<screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/03-photographs.png</screenshot>
+```
 
-Další tři záznamy v galerii jsou původní screenshoty uživatelského rozhraní v `docs/images/appstore/`. Tyto čtyři obrazové položky **nejsou zaměnitelné** s ikonou `img/app.svg` v instalačním archivu.
+## Postup vydání – důležitá závislost
 
-V `README.md` a `README_CZ.md` je stále jen jediný skutečný screenshot rodokmenu `docs/images/appstore/01-overview.png`.
+1. Nejdříve nahrát **nové soubory `src/img/01-overview.png`, `02-journal.png`, `03-photographs.png`** a upravené metadata do větve `main` repozitáře `hacesoft/FamilyTree`. V repozitáři musí být obsah `full-source.zip` v kořeni, nikoliv v podadresáři `hc_familytree/`.
+2. Ověřit každý přímý raw GitHub odkaz metodou HTTP GET: status 200, `Content-Type: image/png`, správné rozměry a SHA-256 bajtů. Pro automatickou kontrolu lze spustit `node scripts/check-appstore-public-urls.cjs` (po uploadu zdrojů na GitHub; vyžaduje přístup k internetu).
+3. Teprve po úspěšné kontrole provést nové podepsané vydání Publisherem a registrovat verzi 1.1.3 v Nextcloud App Storu. `build-release.sh` nepodepisuje ani nepublikuje.
+4. Poté ověřit veřejnou kartu a galerii v App Storu. Jejich zobrazení závisí i na obrazové cache Nextcloudu; místní build nestačí jako důkaz úspěchu.
 
-## Zveřejnění
+Soubory ve vydaném instalačním TAR.GZ musí být pod `hc_familytree/img/`. App Store si **obrázky galerie nestahuje ze složky `img/` v TAR.GZ**, ale z URL v `appinfo/info.xml`. Do TAR.GZ jsou zde screenshoty navíc přibalené pro konzistenci, nikoliv jako náhrada zveřejnění na GitHubu.
 
-1. Přenést `docs/images/appstore/` spolu s celým projektem do veřejného repozitáře `https://github.com/hacesoft/FamilyTree` na větev `main` (obsah repozitáře je přímo v kořeni, ne ve složce `hc_familytree`).
-2. Ověřit všech šest URL deklarovaných ve `<screenshot>` (hlavní `src/img/app-store.png`, `src/img/menu-preview.png`, tři původní screenshoty a náhled `01-overview-small.png`) — musí vrátit PNG, ne HTTP 404. Odkaz na hlavní grafiku `src/img/app-store.png` už vlastník ověřil v prohlížeči.
-3. `src/appinfo/info.xml` deklaruje čtyři `<screenshot>` v pořadí: schválené logo aplikace s náhledem, přehled rodokmenu s náhledem, badatelský deník a fotografie. Změny metadat a snímků musí být publikovány společně.
-4. Pro App Store jsou zdrojem obrázků tyto veřejné HTTPS adresy, nikoli lokální soubory v instalaci Nextcloudu. Pouze `src/` je instalační runtime; obsah `docs/` patří do úplného zdrojového vydání a na GitHub.
-
-Každý hlavní snímek musí mít méně než 2 MiB. Žádný z dodaných obrázků tuto hranici nepřekračuje. Formát rozlišení není povinně sjednocen; nedělat násilné převzorkování. Před zveřejněním zkontrolovat, zda snímky neobsahují osobní nebo citlivé údaje.
-
-## Kontrola schválených originálů (HDS / CP21)
-
-Všechny uvedené snímky a původní ikona rodinného stromu musí zůstat **bitově beze změny**. Soubor `scripts/appstore-approved-assets.json` obsahuje SHA-256 referenčních originálů a jejich veřejné URL; kontrolní skript `node scripts/check-appstore-assets.cjs .` porovná skutečné soubory se schválenými hashi a ověří `src/appinfo/info.xml` i odkazy hlavního screenshotu v obou README.
-
-Sestavení `sh build-release.sh` navíc povinně kontroluje, že se schválená ikona nachází v `img/app.svg` uvnitř runtime ZIPu i TAR.GZ a že screenshoty nejsou změněné ve veřejném full-source ZIPu. Chybějící nebo změněný originál vydání blokuje. Referenční manifest nesmí být samoúčelně upravován kvůli odstranění chyby kontroly; změna grafiky vyžaduje nové výslovné schválení.
-
-Kontrola veřejných URL a výsledného zobrazení ve Nextcloud App Storu je **samostatná následná kontrola po zveřejnění**; bez ní se nesmí uvádět veřejné ověření PASS. Screenshoty jsou načítány z HTTPS URL a nemusejí být v běhovém TAR.GZ; správné `<screenshot>` záznamy ale ve vydaném `appinfo/info.xml` být musejí.
-
-**Poznámka:** Publisher nepřenáší změny na GitHub. Aby nové odkazy fungovaly, soubory musí být ve veřejné větvi `main` na přesně uvedených cestách a aplikace musí být znovu publikována v App Storu. Lokální kontrola není důkazem dostupnosti přes HTTPS.
+Kontrola ikon v HDS/CP21 zůstává blokující a referenční hashe se nesmějí měnit bez schválení vlastníkem. Online URL nemohou mít PASS před zveřejněním souborů.

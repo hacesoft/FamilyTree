@@ -1,6 +1,6 @@
 [English](../en/01_INSTALLATION.md)
 
-# Instalace FamilyTree 1.1.1
+# Instalace FamilyTree 1.1.2
 
 ## 1. Oficiální instalace (doporučená)
 
@@ -11,7 +11,7 @@
 3. Vyhledejte **FamilyTree / Rodokmen**, nainstalujte a povolte (`hc_familytree`). Odkaz: https://apps.nextcloud.com/apps/hc_familytree.
 4. Otevřete aplikaci z hlavního menu. Před aktualizací zazálohujte databázi a soubory.
 
-Repozitář GitHub je určen pro **zdrojové kódy**, nikoliv jako primární cesta instalace. GitHub ZIP ani nepodepsaný staging TAR.GZ nenahrazují podepsaný balíček v Nextcloud App Storu. Když verze 1.1.1 ještě není v App Storu, znamená to, že dosud nebyla publikována; nelze ji považovat za oficiální jen na základě staženého ZIPu.
+Repozitář GitHub je určen pro **zdrojové kódy**, nikoliv jako primární cesta instalace. GitHub ZIP ani nepodepsaný staging TAR.GZ nenahrazují podepsaný balíček v Nextcloud App Storu. Když verze 1.1.2 ještě není v App Storu, znamená to, že dosud nebyla publikována; nelze ji považovat za oficiální jen na základě staženého ZIPu.
 
 ## 2. Vývojářský/testovací instalátor — pouze Docker / NAS
 
@@ -38,4 +38,4 @@ Při chybě vypíše diagnostiku. Více k opakování a záloze kódu: [obnova i
 
 ## 3. Výroba oficiálního vydání (správce vydání)
 
-`sh build-release.sh` sestaví **nepodepsaný běhový ZIP** (`release/hc_familytree-1.1.1.zip`) pro Publisher CP21, nepodepsaný staging TAR.GZ a právě jeden veřejný **`hc_familytree-1.1.1-full-source.zip`** pro Publisher CP21. Všechny tyto archivy jsou mezivýstupy, nikoliv podepsané vydání. Po HDS a CP21 kontrolách musí vydavatel v Hacesoft Publisheru podepsat instalační kód pomocí certifikátu aplikace (vznikne `appinfo/signature.json`), vytvořit finální TAR.GZ, podepsat **celý archiv** a nahrát HTTPS URL plus podpis do Nextcloud App Storu. **Bez obou podpisových kroků nevydávat.** Viz [oficiální pravidla Nextcloudu](https://nextcloudappstore.readthedocs.io/en/latest/developer.html).
+`sh build-release.sh` sestaví **nepodepsaný běhový ZIP** (`release/hc_familytree-1.1.2.zip`) pro Publisher CP21, nepodepsaný staging TAR.GZ a právě jeden veřejný **`hc_familytree-1.1.2-full-source.zip`** pro Publisher CP21. Všechny tyto archivy jsou mezivýstupy, nikoliv podepsané vydání. Po HDS a CP21 kontrolách musí vydavatel v Hacesoft Publisheru podepsat instalační kód pomocí certifikátu aplikace (vznikne `appinfo/signature.json`), vytvořit finální TAR.GZ, podepsat **celý archiv** a nahrát HTTPS URL plus podpis do Nextcloud App Storu. **Bez obou podpisových kroků nevydávat.** Viz [oficiální pravidla Nextcloudu](https://nextcloudappstore.readthedocs.io/en/latest/developer.html).

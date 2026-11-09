@@ -1,3 +1,23 @@
+## 1.1.4 – 2026-11-09
+
+- Přidán nový náhledový a potvrzovaný import dílčích genealogických nálezů do stávajícího rodokmenu.
+- Sloučení podle stabilních ID, bez mazání stávajících osob a bez přepisování konfliktních údajů.
+- GEDZIP, výzkumný deník a archivní snímky ve společném ZIPu; důkazy s auditní historií.
+- Při opakovaném importu deduplikace deníku a archivních souborů.
+
+## 1.1.3 — 2026-11-09
+
+- Karta App Storu a galerie nově používají skutečný schválený snímek rodokmenu bez náhrady logem, podle příkladu Nextcloud Talk.
+- Doplněny bitově totožné kopie schválených snímků do `src/img/`, opraveny odkazy a přidáno samostatné online ověřování obrázků.
+- Datový model, práva a migrace se nemění.
+
+## 1.1.2 — 2026-11-08
+
+- Opraveno propojení obrázků pro Nextcloud App Store: schválená grafika 512 × 512 je nyní náhled karty `small-thumbnail` prvního snímku, zatímco galerie začíná skutečným přehledem rodokmenu.
+- Odstraněno používání malého 64 × 64 náhledu v metadatech; původní soubor i všechny schválené obrázky zůstávají beze změny.
+- Přidána blokující kontrola malého náhledu, pořadí galerie a URL. Zobrazení ve veřejné cache vyžaduje následné ověření po publikaci.
+- Beze změny funkcí, uložených rodokmenů, databáze a grafických originálů.
+
 ## 1.1.1 — 2026-11-08
 
 - Opravné vydání po 1.1.0. Aktualizovaná metadata obrázků v Nextcloud App Storu musí být zveřejněna jako nová verze.

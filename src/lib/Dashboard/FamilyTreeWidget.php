@@ -45,5 +45,5 @@ public function getIconClass():string{return 'icon-family';}
  * @brief Načte family tree widget používané v FamilyTreeWidget.
  * @return void Bez návratové hodnoty; případné změny jsou popsány účelem metody.
  */
- public function load():void{Util::addScript(Application::APP_ID,'dashboard-1.1.1');}
+ public function load():void{Util::addScript(Application::APP_ID,'dashboard-1.1.4');}
 }

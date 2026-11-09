@@ -1,10 +1,10 @@
-# FamilyTree 1.1.1 for Nextcloud
+# FamilyTree 1.1.4 for Nextcloud
 
 [Česky](README_CZ.md) · [Installation](docs/en/01_INSTALLATION.md) · [Import, export and backup](docs/en/IMPORT_EXPORT_BACKUP.md) · [Changelog](CHANGELOG.en.md)
 
 **FamilyTree** is a self-hosted genealogy application for **Nextcloud 35**. Create and share family trees, people, relationships and events; manage photos, sources, documents and research notes; import GEDCOM 7 / GEDZIP; and keep your records in your own Nextcloud.
 
-![FamilyTree — main family tree view](docs/images/appstore/01-overview.png)
+![FamilyTree — main family tree view](src/img/01-overview.png)
 
 ## Installation — recommended for all users
 
@@ -46,6 +46,7 @@ The script deploys `src/` into the selected Nextcloud containers, checks the Cor
 - Documents, photographs, source citations and a research journal with tasks, searches and evidence
 - Sharing with Nextcloud users and permission-aware access
 - Responsive UI with English as default/fallback, Czech and nine other locale catalogs
+- **Merge research findings** into an existing family tree using a ZIP bundle with GEDZIP, a research-journal JSON, and archive scans. Preview and explicitly approve all changes before importing; existing people and facts are not overwritten.
 
 ## Data and documentation
 
@@ -61,6 +62,8 @@ A native FamilyTree ZIP backup is distinct from GEDCOM exchange. Keep independen
 
 The **public GitHub source ZIP** contains `src/` (the complete runnable app), public `docs/`, screenshots, license, changelogs and source deployment/build scripts. It intentionally excludes private keys, credentials, internal HDS/CP21 audit evidence, runtime logs and test reports.
 
-`sh build-release.sh` assembles an **unsigned runtime ZIP** (`release/hc_familytree-1.1.1.zip`) for Publisher CP21, an **unsigned staging TAR.GZ**, and exactly one clean **`release/hc_familytree-1.1.1-full-source.zip`** from this checkout; the build **does not sign or publish** a release. The release manager uses Hacesoft Publisher to run mandatory quality gates, sign the application with the registered Nextcloud certificate, and publish the final TAR.GZ and its archive signature to the App Store. The signed final artifact is not produced by this GitHub source ZIP alone.
+`sh build-release.sh` assembles an **unsigned runtime ZIP** (`release/hc_familytree-1.1.4.zip`) for Publisher CP21, an **unsigned staging TAR.GZ**, and exactly one clean **`release/hc_familytree-1.1.4-full-source.zip`** from this checkout; the build **does not sign or publish** a release. The release manager uses Hacesoft Publisher to run mandatory quality gates, sign the application with the registered Nextcloud certificate, and publish the final TAR.GZ and its archive signature to the App Store. The signed final artifact is not produced by this GitHub source ZIP alone.
 
 **License:** [AGPL-3.0-or-later](LICENSE). Report problems via [GitHub Issues](https://github.com/hacesoft/FamilyTree/issues).
+
+**New in 1.1.4:** [Import research findings into an existing tree](docs/en/IMPORT_FINDINGS_INTO_EXISTING_TREE.md).

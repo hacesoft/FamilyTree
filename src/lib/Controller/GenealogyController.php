@@ -263,6 +263,19 @@ public function __construct(IRequest $oRequest, private GenealogyService $oServi
  */
     #[NoAdminRequired] public function importResearch(int $treeId): Response { return $this->oService->importResearch($treeId); }
     /**
+     * @brief Zobrazí bezpečný náhled nálezů pro existující rodokmen.
+     * @param int $treeId Identifikátor stromu odpovídající Nextcloud route.
+     * @return Response Návrh bez databázových změn.
+     */
+    #[NoAdminRequired] public function previewFindings(int $treeId): Response { return $this->oService->previewFindings($treeId); }
+    /**
+     * @brief Aplikuje uživatelem schválený import nálezů do existujícího stromu.
+     * @param int $treeId Identifikátor stromu odpovídající Nextcloud route.
+     * @return Response Výsledek atomického importu.
+     */
+    #[NoAdminRequired] public function applyFindings(int $treeId): Response { return $this->oService->applyFindings($treeId); }
+
+    /**
  * @brief Vygeneruje úplnou nativní ZIP zálohu bez změny dat.
  * @return Response HTTP odpověď předaná klientovi.
  */

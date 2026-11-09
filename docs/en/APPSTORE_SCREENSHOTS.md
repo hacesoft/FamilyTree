@@ -1,21 +1,9 @@
-# Nextcloud App Store screenshots
+# FamilyTree 1.1.3 – Nextcloud App Store imagery
 
-The App Store gallery starts with the original approved branding image `src/img/app-store.png` (512 × 512) and its existing `src/img/menu-preview.png` thumbnail (64 × 64). These are separate from the runtime icon `img/app.svg`. The three original UI screenshots follow in the gallery. Both README files continue to display only the tree-view screenshot.
+The Nextcloud Talk (`spreed`) reference separates navigation icons (`img/app.svg`) from App Store images (HTTPS screenshot URLs from `appinfo/info.xml`). Merely storing an image under `img/` will not make it appear in the App Store gallery.
 
-The full-source project keeps the original screenshot images in `docs/images/appstore/` without resizing or recompression:
+For FamilyTree, the approved color SVG icon remains `src/img/app.svg` in public source and `img/app.svg` in the installed runtime. The app catalogue card and the first gallery slide now both use **the real family-tree overview** `src/img/01-overview.png`, without a `small-thumbnail` override. The other screenshots are `src/img/02-journal.png` and `src/img/03-photographs.png`.
 
-- `01-overview.png` (2044 × 1020); `01-overview-small.png` (1187 × 715) is the user-provided preview.
-- `02-journal.png` (965 × 820) shows the Research Journal task view.
-- `03-photographs.png` (968 × 830) shows saved photos and scans.
+All three files are byte-identical copies of the approved originals under `docs/images/appstore/`; the original `src/img/app-store.png` and `menu-preview.png` remain untouched as supplemental branding. The official signed TAR.GZ contains `img/` under the application root, but the App Store gallery loads the public HTTPS URLs in the metadata rather than image files in the archive.
 
-Before publishing to the Nextcloud App Store, commit these files alongside the updated `src/appinfo/info.xml` on the **public repository `hacesoft/FamilyTree`, branch `main`**, preserving repository-root `docs/images/appstore/` paths. Check all six `raw.githubusercontent.com` HTTPS image URLs (including the logo and its thumbnail) return valid images (not 404). The repository owner confirmed the `src/img/app-store.png` link works; other URLs still require public verification. The App Store reads these public URLs, not local screenshot files inside the Nextcloud installation. Only `src/` is the deployable runtime.
-
-The first two `<screenshot>` elements each use a dedicated `small-thumbnail` URL; the remaining two omit it. A main screenshot must be no larger than 2 MiB. Screenshots do not need a universal pixel size; do not force downscaling. Review displayed data for any privacy risks before publishing.
-
-## Approved asset integrity gate (HDS / CP21)
-
-Do not redraw, resize or replace the approved FamilyTree icon or screenshots. The public reference `scripts/appstore-approved-assets.json` pins the original file hashes and the expected screenshot URLs. Run `node scripts/check-appstore-assets.cjs .` to verify local source images, screenshot metadata and both README image links. `sh build-release.sh` additionally checks the built `img/app.svg` in the runtime ZIP and TAR.GZ and the unchanged screenshots in the public full-source ZIP. An invalid or modified asset blocks packaging.
-
-Changing this reference manifest is not a substitute for owner approval. Public HTTPS image reachability and actual rendering in the Nextcloud App Store are **post-publication** checks: report them as pending until independently verified. The App Store retrieves screenshots by HTTPS using `info.xml`; copying all screenshots into the runtime TAR.GZ is not required.
-
-The Publisher input ZIP **does not publish files to GitHub**. Deploy the complete public source tree at the repository root and republish the official signed release before expecting updated App Store metadata to be shown.
+**Deployment order:** commit new `src/img` screenshots and `src/appinfo/info.xml` to the repository root on GitHub `main`; verify the three raw URLs with HTTP 200 and matching SHA-256 (`node scripts/check-appstore-public-urls.cjs`); build, sign and register 1.1.3 through Publisher; inspect card and gallery on the public Nextcloud App Store after cache refresh. The online check must remain PENDING until the GitHub files are uploaded and reachable. Do not claim a successful public rendering test from a local build alone.

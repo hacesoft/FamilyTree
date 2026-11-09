@@ -1,3 +1,23 @@
+## 1.1.4 – 2026-11-09
+
+- Added review-first findings merge into an existing family tree.
+- Exact stable-ID matching, non-destructive genealogical updates, and conflict safeguards.
+- Combined GEDZIP, research journal and historical media with an audit trail.
+- Repeat imports avoid duplicate journal records and stored media.
+
+## 1.1.3 — 2026-11-09
+
+- The catalog card and gallery now use the original FamilyTree overview screenshot, following Nextcloud Talk; the approved icon remains separate.
+- Added lossless copies of approved screenshots under `src/img/`, updated metadata and public URL verification.
+- No data, schema or permission changes.
+
+## 1.1.2 — 2026-11-08
+
+- Fixed App Store image roles: the approved 512 × 512 branding image is the first screenshot's `small-thumbnail` for the app card, while the gallery begins with the actual family-tree overview.
+- Removed the tiny 64 × 64 thumbnail from published metadata without changing any approved source asset.
+- Added blocking checks for undersized preview, screenshot order and URL mapping; external caching and display still require post-publication verification.
+- No changes to genealogy features, stored data, schema or source image bytes.
+
 ## 1.1.1 — 2026-11-08
 
 - Patch release after 1.1.0 so updated Nextcloud App Store image metadata are distributed under a new version.

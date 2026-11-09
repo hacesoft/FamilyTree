@@ -184,10 +184,11 @@ public function __construct(private IDBConnection $oDb, private ResearchJournalS
  * @param int $nTreeId Jednoznačný identifikátor rodokmenu, k němuž se vztahuje operace.
  * @param array $aDocument Vstupní parametr „document“ pro operaci apply.
  * @param string $sActor Identifikátor uživatele, který provedl změnu.
+ * @param bool $bExternalTransaction Při true transakci zahajuje a potvrzuje volající.
  * @return array Strukturované výsledky operace; u volitelného návratu může být null.
  */
-    public function apply(int $nTreeId,array $aDocument,string $sActor):array {
-        $this->oDb->beginTransaction();
+    public function apply(int $nTreeId,array $aDocument,string $sActor,bool $bExternalTransaction=false):array {
+        if (!$bExternalTransaction) $this->oDb->beginTransaction();
         try{
             $oReport=$this->inspect($nTreeId,$aDocument);
             $nNow=time();
@@ -215,9 +216,9 @@ public function __construct(private IDBConnection $oDb, private ResearchJournalS
                     $this->oJournal->audit($nTreeId,$sTable,$sUid,'create',$sActor,null,$oAfter,'Import výzkumného deníku '.$oReport['source'].' / '.$sSourceId);
                 }
             }
-            $this->oDb->commit();
+            if (!$bExternalTransaction) $this->oDb->commit();
             unset($oReport['items']);
             return $oReport;
-        }catch(\Throwable $oError){$this->oDb->rollBack();throw $oError;}
+        }catch(\Throwable $oError){if (!$bExternalTransaction) $this->oDb->rollBack();throw $oError;}
     }
 }

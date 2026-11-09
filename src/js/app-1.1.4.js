@@ -6425,6 +6425,8 @@ function showImportChoice(){
  <div class="hc-familytree-transfer-choice">
  <label><input name="hc-transfer-import-format" type="radio" value="gedcom" checked><strong> GEDCOM 7 / GEDZIP (.ged, .gedcom, .gdz, .zip)</strong>\
 <small>Import genealogical records and attached images. Create a new family tree directly, or import into the currently open tree.</small></label>
+ ${oState?.canEdit ? fnHtml`<label><input name="hc-transfer-import-format" type="radio" value="findings"><strong> Import findings into the existing family tree (.zip)</strong>\
+<small>Preview matched people, new relatives, events, evidence images and research journal; no duplicates or overwriting.</small></label>` : ''}
  <label><input name="hc-transfer-import-format" type="radio" value="native"><strong> Complete FamilyTree backup (.zip)</strong>\
 <small>Only archives created by the complete FamilyTree backup export. Restoration creates separate trees with new IDs and overwrites nothing.</small></label></div>
  <p class="hc-familytree-hint">An ordinary ZIP can be imported as GEDZIP if it contains GEDCOM 7 in a root-level gedcom.ged file. Arbitrary ZIP archives are not supported.</p>
@@ -6434,9 +6436,99 @@ function showImportChoice(){
  * @returns {unknown} Výsledná hodnota nebo dokončení callbacku.
  */
 ()=>{
-  if(document.querySelector('input[name="hc-transfer-import-format"]:checked')?.value==='native')importNativeDialog();else gedcom();
+  const sImportFormat=document.querySelector('input[name="hc-transfer-import-format"]:checked')?.value;
+  if(sImportFormat==='findings')findingsImportDialog();else if(sImportFormat==='native')importNativeDialog();else gedcom();
  };
 }
+//*****************************************************************************
+/**
+ * @brief Otevře nedestruktivní import nálezů s kontrolou osob, vztahů, snímků a deníku.
+ * @returns {void} Dialog bez změny dat před výslovným potvrzením uživatele.
+ */
+function findingsImportDialog() {
+ if(!nCurrent||!oState?.canEdit){fnToast(fnTr('Select an editable family tree.'),'warning');return;}
+ const nTargetTree=nCurrent;
+ openModal(fnTr('Import findings into the existing family tree'),fnHtml`<div class="hc-familytree-gedcom hc-familytree-transfer-dialog">
+ <p>The original family tree is preserved. Exact stable IDs match existing people; uncertain identities require manual matching. Other people are never removed or marked as missing.</p>
+ <p><strong>${fnEsc(currentTreeName())}</strong></p>
+ <label>Research findings ZIP<input id="hc-findings-file" type="file" accept=".zip,application/zip"></label>
+ <button id="hc-findings-preview" type="button">Preview findings</button>
+ <div id="hc-findings-plan" class="hc-familytree-transfer-status" role="status" aria-live="polite"></div>
+ <label class="hc-familytree-transfer-checkbox"><input id="hc-findings-confirm" type="checkbox" disabled> I have reviewed the plan and backed up this family tree.</label>
+ <p class="hc-familytree-hint">The importer adds people, verified relationships, events, research journal and images. Existing facts are not overwritten. Unverified partnerships and conflicting birth dates stay for manual review.</p>
+ <div class="hc-familytree-form-actions"><button type="button" data-close>Cancel</button><button id="hc-findings-apply" type="button" class="primary" disabled>Import approved findings</button></div>
+ </div>`);
+ const hFile=fnValue('hc-findings-file'),hPreview=fnValue('hc-findings-preview'),hPlan=fnValue('hc-findings-plan'),hConfirm=fnValue('hc-findings-confirm'),hApply=fnValue('hc-findings-apply');
+ let oApproved=null;
+ const oMatches={};
+ /**
+  * @brief Zruší předchozí schválení při změně balíčku nebo ručního přiřazení.
+  * @returns {void} Bez návratové hodnoty.
+  */
+ const fnReset=()=>{oApproved=null;hApply.disabled=true;hConfirm.disabled=true;hConfirm.checked=false};
+ hFile.onchange=()=>{fnReset();hPlan.replaceChildren()};
+ /**
+  * @brief Připraví upload a předá ručně přiřazené stabilní identifikátory.
+  * @param {string} sHash Otisk potvrzeného plánu, prázdný při preview.
+  * @returns {FormData} Formulář pro serverovou kontrolu.
+  */
+ const fnBody=(sHash='')=>{const oForm=new FormData();
+  if(hFile.files[0])oForm.append('findings',hFile.files[0]);
+  oForm.append('manual_matches',JSON.stringify(oMatches));
+  if(sHash){oForm.append('preview_sha256',sHash);oForm.append('confirm','yes')}
+  return oForm;
+ };
+ hConfirm.onchange=()=>{hApply.disabled=!oApproved||!hConfirm.checked};
+ hPreview.onclick=async()=>{
+  if(!hFile.files.length)return fnToast(fnTr('Select a ZIP archive.'),'warning');
+  fnReset();hPreview.disabled=true;hPlan.textContent=fnTr('Checking import…');
+  try{
+   const oReport=await fnApi('/api/trees/'+nTargetTree+'/findings/preview',{method:'POST',body:fnBody()});
+   const oC=oReport.counts;
+   const sHeading=`<p><strong>${fnTr('Preview findings')}</strong> ·
+      ${fnTr('new people')}: ${+oC.persons_new}, ${fnTr('existing people')}: ${+oC.persons_existing},
+      ${fnTr('new relationships')}: ${+oC.relations_new}, ${fnTr('new events')}: ${+oC.events_new},
+      ${fnTr('images')}: ${+oC.pictures}, ${fnTr('journal records')}: ${+oC.journal_new}
+      (${+oC.journal_existing} ${fnTr('existing')}).</p>`;
+   const sOptions=(oState.people||[]).map(oPerson=>`<option value="${fnEsc(oPerson.stable_id||'')}">${fnEsc([oPerson.given_name,oPerson.surname].filter(Boolean).join(' ')+' · '+(oPerson.stable_id||''))}</option>`).join('');
+   const sPeople=(oReport.people||[]).map(oPerson=>{
+    const sValue=oMatches[oPerson.source_id]||'';
+    return `<tr><td>${fnEsc(oPerson.name)}</td>
+      <td>${oPerson.action==='existing'?fnTr('Matches existing person'):fnTr('Create person')}</td>
+      <td><select data-findings-match="${fnEsc(oPerson.source_id)}">
+        <option value="">${fnTr('Use automatic mapping')}</option>${sOptions}</select></td></tr>`;
+   }).join('');
+   const sConflicts=(oReport.conflicts||[]).map(sText=>`<li>${fnEsc(sText)}</li>`).join('');
+   const sWarnings=(oReport.warnings||[]).map(sText=>`<li>${fnEsc(sText)}</li>`).join('');
+   const sRelations=(oReport.relations||[]).map(oRelation=>`<li>${fnEsc(oRelation.names)} (${fnEsc(oRelation.action)})</li>`).join('');
+   hPlan.innerHTML=sHeading+
+    `<p><strong>${fnTr('People and matching')}</strong></p><div style="overflow:auto"><table><thead>
+      <tr><th>${fnTr('Person')}</th><th>${fnTr('Action')}</th><th>${fnTr('Manual match')}</th></tr>
+      </thead><tbody>${sPeople}</tbody></table></div>`+
+    `<details><summary>${fnTr('Relationships for review')}</summary><ul>${sRelations}</ul></details>`+
+    (sConflicts?`<p><strong>${fnTr('Conflicts – import blocked')}</strong></p><ul>${sConflicts}</ul>`:'')+
+    (sWarnings?`<p><strong>${fnTr('Warnings')}</strong></p><ul>${sWarnings}</ul>`:'')+
+    `<p>${fnTr('Existing persons and events will not be overwritten. A repeat import skips existing journal records and files.')}</p>`;
+   for(const hSelect of hPlan.querySelectorAll('select[data-findings-match]')){
+    const sSource=hSelect.dataset.findingsMatch;
+    hSelect.value=oMatches[sSource]||'';
+    hSelect.onchange=()=>{if(hSelect.value)oMatches[sSource]=hSelect.value;else delete oMatches[sSource];fnReset()};
+   }
+   if(!(oReport.conflicts||[]).length){oApproved={file:hFile.files[0],hash:oReport.plan_sha256};hConfirm.disabled=false;}
+  }catch(oError){hPlan.textContent=oError.message;fnToast(oError.message,'error')}
+  finally{hPreview.disabled=false}
+ };
+ hApply.onclick=async()=>{
+  if(!oApproved||oApproved.file!==hFile.files[0]||!hConfirm.checked||nTargetTree!==nCurrent)return;
+  hApply.disabled=true;hPlan.textContent=fnTr('Importing approved findings…');
+  try{
+   const oDone=await fnApi('/api/trees/'+nTargetTree+'/findings/apply',{method:'POST',body:fnBody(oApproved.hash)});
+   closeModal();await loadTrees();await selectTree(nTargetTree);
+   fnToast(fnTr('Findings imported')+`: ${+oDone.created_people} ${fnTr('new people')}, ${+oDone.created_relations} ${fnTr('new relationships')}, ${+oDone.documents} ${fnTr('images')}, ${+oDone.journal_new} ${fnTr('journal records')}.`);
+  }catch(oError){hPlan.textContent=oError.message;fnToast(oError.message,'error');fnReset()}
+ };
+}
+
 //*****************************************************************************
 /**
  * @brief Importuje native dialog v uživatelském rozhraní FamilyTree.
