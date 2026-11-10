@@ -1,4 +1,4 @@
-# Import badatelských nálezů do existujícího rodokmenu (1.1.4)
+# Import badatelských nálezů do existujícího rodokmenu (1.1.5)
 
 Tento režim slouží k **doplnění stávajícího rodokmenu** o nově dohledané osoby, rodiče, doložené partnerské vztahy, události, archivní obrázky a položky výzkumného deníku. **Není to** obnova úplné zálohy ani běžný GEDCOM import „aktualizovat podle UID“.
 
@@ -27,4 +27,4 @@ Podporovaný **balíček nálezů** obsahuje přesně jeden `.gdz` s GEDCOM 7 (`
 - Potvrzený import používá databázovou transakci a při chybě se pokusí odstranit jen nově vytvořené soubory. **Nenahrazuje pravidelnou zálohu a neřeší automaticky všechny genealogické spory.**
 - Opakovaný import stejného balíčku nesmí vytvářet další stejné osoby, vztahy, události ani dokumenty. Nové externí balíčky vždy předem prověřte.
 
-**Zvlášť důležité:** JSON v samostatném dialogu „Import výzkumného deníku“ stále doplňuje pouze deník, nikoli osoby, vztahy nebo obrázky. Nový režim je samostatný importní průvodce v aplikaci FamilyTree 1.1.4.
+**Zvlášť důležité:** JSON v samostatném dialogu „Import výzkumného deníku“ stále doplňuje pouze deník, nikoli osoby, vztahy nebo obrázky. Nový režim je samostatný importní průvodce v aplikaci FamilyTree 1.1.5.

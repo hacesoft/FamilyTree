@@ -1,3 +1,10 @@
+## 1.1.5 – 2026-11-10
+
+- Nové názvy URL screenshotů (`01.png`, `02.png`, `03.png`) kvůli obnovení cache App Storu; obrazová data i schválené ikony jsou beze změny.
+- Hlavní screenshot je také vlastním náhledem karty, bez malého loga.
+- Nové obrázky je nutné zveřejnit na GitHubu ještě před registrací vydání; zobrazení galerie ověřit zvlášť.
+- Bez změn ve slučovacím importu, datech a schématu.
+
 ## 1.1.4 – 2026-11-09
 
 - Přidán nový náhledový a potvrzovaný import dílčích genealogických nálezů do stávajícího rodokmenu.
@@ -92,7 +99,7 @@
 - Žádná databázová migrace; screenshoty App Store a metadata zachovány.
 
 ## 1.1.0-dev12 — 31. 10. 2026
-- Přidány tři původní snímky pro Nextcloud App Store a dodaný malý náhled přehledu do `docs/images/appstore/`, bez zmenšování nebo rekomprese.
+- Přidány tři původní snímky pro Nextcloud App Store a dodaný malý náhled přehledu do dřívější veřejné složky screenshotů (již nepoužívané), bez zmenšování nebo rekomprese.
 - V `src/appinfo/info.xml` nastaveny HTTPS odkazy na snímky v repozitáři GitHub na větvi `main` (po jejich zveřejnění).
 - Doplněny kontroly metadat a český/anglický návod. Databáze, GEDCOM i struktura úplné zálohy zůstávají beze změny.
 

@@ -1,4 +1,4 @@
-# Import research findings into an existing family tree (1.1.4)
+# Import research findings into an existing family tree (1.1.5)
 
 This additive import is different from GEDCOM UID synchronization and native ZIP restoration. It can add new people, proven family links, events, images and append-only research journal entries to an existing tree.
 

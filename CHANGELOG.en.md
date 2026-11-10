@@ -1,3 +1,10 @@
+## 1.1.5 — 2026-11-10
+
+- New version-specific screenshot URLs (`01.png`, `02.png`, `03.png`) to request fresh Nextcloud App Store cache keys, preserving the exact image bytes.
+- The first real UI screenshot now also serves as its own `small-thumbnail` for the catalog card.
+- Publish the three new files to GitHub `main` and verify their public URLs before registering the signed release; public gallery rendering remains independently unverified.
+- No changes to research findings import, the data schema, or approved icons.
+
 ## 1.1.4 – 2026-11-09
 
 - Added review-first findings merge into an existing family tree.
@@ -82,7 +89,7 @@
 
 ### 1.1.0-dev12 — App Store screenshots (2026-10-31)
 
-Added the three supplied App Store screenshots plus the overview thumbnail unmodified. Registered absolute HTTPS screenshot URLs in app metadata, pointing to public files under `docs/images/appstore/` on the GitHub `main` branch once uploaded. No data/schema changes.
+Added the three supplied App Store screenshots plus the overview thumbnail unmodified. Registered absolute HTTPS screenshot URLs in app metadata, pointing to public files under the former public screenshot directory (no longer used) on the GitHub `main` branch once uploaded. No data/schema changes.
 
 ## 1.1.0-dev11 — 2026-10-31
 - Removed the outdated informational “Dialogs and controls” card from application settings, without changing existing controls or stored data.

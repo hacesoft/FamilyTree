@@ -42,7 +42,7 @@ public function __construct(IRequest $oRequest, private IURLGenerator $oUrlGener
             'coreStatusUrl' => $this->oUrlGenerator->linkTo('', 'index.php/apps/hc_shared_app_core/api/v1/status'),
             'coreStyleUrl' => $this->oUrlGenerator->linkTo('hc_shared_app_core', 'css/workspace.css'),
             'coreScriptUrl' => $this->oUrlGenerator->linkTo('hc_shared_app_core', 'js/hc_shared_app_core.js'),
-            'appScriptUrl' => $this->oUrlGenerator->linkTo(Application::APP_ID, 'js/app-1.1.4.js'),
+            'appScriptUrl' => $this->oUrlGenerator->linkTo(Application::APP_ID, 'js/app-1.1.5.js'),
         ]);
     }
 }

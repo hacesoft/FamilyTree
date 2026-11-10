@@ -7,7 +7,7 @@ use OCP\Util;
 // Výjimka H05: $l a $_ jsou pevné proměnné poskytované šablonovým rozhraním Nextcloudu; nepřejmenovávat.
 // Záměrně pouze nezávislý Guard a CSS aplikace. Core ani hlavní JS se zde nenačítají.
 Util::addScript('hc_familytree', 'core-guard');
-Util::addStyle('hc_familytree', 'style-1.1.4');
+Util::addStyle('hc_familytree', 'style-1.1.5');
 ?>
 <div
     id="hc_familytree"
