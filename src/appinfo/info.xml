@@ -80,9 +80,9 @@ https://github.com/hacesoft/FamilyTree</description>
   <website>https://github.com/hacesoft/FamilyTree</website>
   <bugs>https://github.com/hacesoft/FamilyTree/issues</bugs>
   <repository>https://github.com/hacesoft/FamilyTree</repository>
-  <screenshot small-thumbnail="https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/01.png">https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/01.png</screenshot>
-  <screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/02.png</screenshot>
-  <screenshot>https://raw.githubusercontent.com/hacesoft/FamilyTree/main/src/img/03.png</screenshot>
+  <screenshot small-thumbnail="https://raw.githubusercontent.com/hacesoft/familytree/main/src/img/01.png">https://raw.githubusercontent.com/hacesoft/familytree/main/src/img/01.png</screenshot>
+  <screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/src/img/02.png</screenshot>
+  <screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/src/img/03.png</screenshot>
   <documentation>
     <user>https://github.com/hacesoft/FamilyTree</user>
     <admin>https://github.com/hacesoft/FamilyTree</admin>
