@@ -80,7 +80,8 @@ https://github.com/hacesoft/FamilyTree</description>
   <website>https://github.com/hacesoft/familytree</website>
   <bugs>https://github.com/hacesoft/familytree/issues</bugs>
   <repository>https://github.com/hacesoft/familytree</repository>
-  <screenshot small-thumbnail="https://raw.githubusercontent.com/hacesoft/FamilyTree/main/screenshot/01.png">https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/01.png</screenshot>
+  <screenshot>https://raw.githubusercontent.com/andremadstop/learning-nc/main/screenshots/08-en-dashboard.png</screenshot>
+  <screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/01.png</screenshot>
   <screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/02.png</screenshot>
   <screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/03.png</screenshot>
   <documentation>
