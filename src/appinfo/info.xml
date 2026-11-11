@@ -1,170 +1,66 @@
-<?xml version="1.0"?>
-<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-    <id>learning</id>
-    <name>Learning</name>
-    <summary>Self-hosted flashcards with FSRS scheduling, IT simulators, AI tutor &amp; instructor analytics</summary>
-    <description><![CDATA[**Learning** is a self-hosted learning platform for Nextcloud. Your questions, progress, and student data never leave your server.
-
-Built for IT certification bootcamps (CompTIA, Cisco, AWS) but works for any subject. Instructors create courses, track student progress, and identify at-risk learners. Students drill with scientifically-backed spaced repetition and hands-on simulations.
-
-## Why Learning?
-
-- **Your data stays on your server** — no cloud dependency, full GDPR compliance
-- **FSRS adaptive scheduling** — cards are prioritized by memory strength, not rigid intervals
-- **9 interactive IT simulators** — CLI terminals, firewall builders, DNS resolvers, subnet calculators, network topology placement
-- **AI tutor (optional)** — answers questions by citing your uploaded course materials
-- **Verifiable certificates** — issue cryptographically signed, publicly verifiable completion credentials
-
-## For Instructors
-
-- Course management with pool assignment and student enrollment
-- **At-risk warnings** — automatic detection of struggling students
-- **Chapter heatmaps** — see where the class struggles at a glance
-- **Curriculum timeline** — plan course schedule with milestones
-- **Admin dashboard** — CSV export, course archiving, cohort merging
-- Campaign selection — choose which story scenarios are available per course
-
-## Certification &amp; Compliance
-
-- **Signed completion certificates** — every passing learner receives a cryptographically signed (Ed25519) certificate, minted automatically
-- **Public verification portal** — anyone can verify a certificate's authenticity via its permanent URL, no login required
-- **Compliance reports** — organization-wide completion overview for audits and works agreements
-- **Mandatory training &amp; recertification** — assign required courses, track certificate expiry, and automate recertification reminders
-- **Tamper-proof audit trail** — every issuance, revocation, and completion is logged
-
-## For Learners
-
-- **Smart Queue** — one-click review of all due cards, sorted by urgency
-- **Training &amp; Exam Mode** — practice or simulate timed exams
-- **PBQ Simulations** — performance-based questions with interactive CLI, drag-and-drop placement, and wiring tasks
-- **Story Campaigns** — learn through real IT incident scenarios (WannaCry, SolarWinds, Log4Shell)
-- **Live Duels &amp; Sprint** — real-time multiplayer quiz battles via Server-Sent Events
-- **Gamification** — XP, levels, streaks, 10 badges, seasonal league
-- **Maintenance Mode** — long-term retention schedule after course ends
-- **Trouble-spot cheat sheet** — export your weakest topics for exam prep
-
-## AI Features (optional)
-
-Optional: the admin connects Google Gemini (API key) or a local Ollama server. Without a connection, the app is fully functional — AI features are simply off. Each user must explicitly consent to the configured recipient before any data is sent; the consent is asked again if the recipient or the consent text changes, and can be withdrawn at any time.
-
-- **VirtuProf** — AI learning assistant with RAG-powered answers and source citations
-- **Question Generator** — create flashcards from pasted text
-- **Note Generator** — AI-powered topic summaries saved to Nextcloud Files
-
-## Question Types
-
-- Multiple Choice, Free Text with fuzzy matching, PBQ Simulations
-- CSV/JSON import &amp; export, pool sharing, multi-language translations
-
-## Technical
-
-- Vue 3, Vite, Pinia — modern frontend stack
-- 1830 automated tests, PHPStan Level 5, pre-push quality gates
-- Native Nextcloud integration: Dashboard widgets, Notifications, Talk, Files
-- AGPL-3.0 — fully open source
-
-## Requirements
-
-- Nextcloud 33–35
-- PHP 8.1+
-- PostgreSQL 13+ or MySQL 8+
-
-**Looking for pilot partners!** If you run Nextcloud at a school, university, or training provider — we'd love your feedback. Open an issue with a bit of context and we're happy to walk you through it.
-    ]]></description>
-
-    <version>5.7.1</version>
-    <licence>agpl</licence>
-    <author mail="dev@quizdojo.com" homepage="https://github.com/andremadstop">Andre</author>
-    <namespace>Learning</namespace>
-
-    <documentation>
-        <user>https://github.com/andremadstop/learning-nc/blob/main/docs/MANUAL.md</user>
-        <admin>https://github.com/andremadstop/learning-nc/blob/main/docs/MANUAL.md</admin>
-    </documentation>
-
-    <category>organization</category>
-    <category>tools</category>
-
-    <website>https://github.com/andremadstop/learning-nc</website>
-    <bugs>https://github.com/andremadstop/learning-nc/issues</bugs>
-    <repository type="git">https://github.com/andremadstop/learning-nc.git</repository>
-
-    <privacy>
-        <duplication>false</duplication>
-        <thirdPartyLibraries>
-            <library>
-                <name>Google Gemini API (optional, alternative: local Ollama server)</name>
-                <version>2.5 Flash</version>
-                <licenseOrTerms>https://cloud.google.com/terms/service-terms</licenseOrTerms>
-            </library>
-        </thirdPartyLibraries>
-        <privacyPolicies>
-            <privacyPolicy xml:lang="en">https://policies.google.com/privacy</privacyPolicy>
-            <privacyPolicy xml:lang="de">https://policies.google.com/privacy?hl=de</privacyPolicy>
-        </privacyPolicies>
-    </privacy>
-
-    <screenshot>https://raw.githubusercontent.com/andremadstop/learning-nc/main/screenshots/08-en-dashboard.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/andremadstop/learning-nc/main/screenshots/09-en-certificate.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/andremadstop/learning-nc/main/screenshots/10-en-simulators.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/andremadstop/learning-nc/main/screenshots/11-en-pools.png</screenshot>
-
-    <dependencies>
-        <php min-version="8.1"/>
-        <nextcloud min-version="33" max-version="35"/>
-    </dependencies>
-
-    <background-jobs>
-        <job>OCA\Learning\BackgroundJob\SendRemindersJob</job>
-    </background-jobs>
-
-    <repair-steps>
-        <post-migration>
-            <step>OCA\Learning\Repair\EnsureAuditChainGenesis</step>
-            <step>OCA\Learning\Repair\MigrateLlmConfiguration</step>
-        </post-migration>
-        <install>
-            <step>OCA\Learning\Repair\EnsureAuditChainGenesis</step>
-            <step>OCA\Learning\Repair\MarkLlmConfigurationMigrated</step>
-        </install>
-    </repair-steps>
-
-    <commands>
-        <command>OCA\Learning\Command\ImportVaultCommand</command>
-        <command>OCA\Learning\Command\ImportPoolJsonCommand</command>
-        <command>OCA\Learning\Command\ExportPoolCommand</command>
-        <command>OCA\Learning\Command\ExportCourseCommand</command>
-        <command>OCA\Learning\Command\ArchiveCourseCommand</command>
-        <command>OCA\Learning\Command\MergeCourseCommand</command>
-        <command>OCA\Learning\Command\InitIssuerCommand</command>
-        <command>OCA\Learning\Command\ImportUsersCommand</command>
-        <command>OCA\Learning\Command\AuditVerifyCommand</command>
-        <command>OCA\Learning\Command\UninstallCommand</command>
-    </commands>
-
-    <settings>
-        <admin>OCA\Learning\Settings\AdminSettings</admin>
-        <admin-section>OCA\Learning\Settings\AdminSection</admin-section>
-        <personal>OCA\Learning\Settings\PersonalSettings</personal>
-        <personal-section>OCA\Learning\Settings\AdminSection</personal-section>
-    </settings>
-
-    <activity>
-        <settings>
-            <setting>OCA\Learning\Activity\Setting</setting>
-        </settings>
-        <providers>
-            <provider>OCA\Learning\Activity\Provider</provider>
-        </providers>
-    </activity>
-
-    <navigations>
-        <navigation>
-            <name>Learning</name>
-            <route>learning.page.index</route>
-            <icon>app.svg</icon>
-            <order>10</order>
-        </navigation>
-    </navigations>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+<id>hc_familytree</id>
+<name lang="cs">Rodokmen</name>
+<name>FamilyTree</name>
+<name lang="de">Stammbaum</name>
+<name lang="es">Árbol genealógico</name>
+<name lang="fr">Arbre généalogique</name>
+<name lang="it">Albero genealogico</name>
+<name lang="nl">Stamboom</name>
+<name lang="pl">Drzewo genealogiczne</name>
+<name lang="pt">Árvore genealógica</name>
+<name lang="sk">Rodokmeň</name>
+<name lang="uk">Родинне дерево</name>
+<summary lang="en">Private family trees in Nextcloud with relationships, photos, sources and GEDCOM 7 import.</summary>
+<summary lang="cs">Soukromé rodokmeny v Nextcloudu: vztahy, fotografie, prameny a import GEDCOM 7.</summary>
+<summary lang="de">Private Stammbäume in Nextcloud mit Beziehungen, Fotos, Quellen und GEDCOM-7-Import.</summary>
+<summary lang="es">Árboles genealógicos privados en Nextcloud con relaciones, fotos, fuentes e importación GEDCOM 7.</summary>
+<summary lang="fr">Arbres généalogiques privés dans Nextcloud avec liens familiaux, photos, sources et import GEDCOM 7.</summary>
+<summary lang="it">Alberi genealogici privati in Nextcloud con relazioni, foto, fonti e importazione GEDCOM 7.</summary>
+<summary lang="nl">Privéstambomen in Nextcloud met familiebanden, foto’s, bronnen en GEDCOM 7-import.</summary>
+<summary lang="pl">Prywatne drzewa genealogiczne w Nextcloud: relacje, zdjęcia, źródła i import GEDCOM 7.</summary>
+<summary lang="pt">Árvores genealógicas privadas no Nextcloud com relações, fotografias, fontes e importação GEDCOM 7.</summary>
+<summary lang="sk">Súkromné rodokmene v Nextcloude so vzťahmi, fotografiami, prameňmi a importom GEDCOM 7.</summary>
+<summary lang="uk">Приватні родинні дерева в Nextcloud зі зв’язками, фото, джерелами та імпортом GEDCOM 7.</summary>
+<description lang="en"># FamilyTree Keep family history in your own Nextcloud instance. Create, explore and share family trees without publishing personal records to an external service. ## Features - Interactive family trees, people, relatives and events - Photos, documents, sources, citations and research notes - FamilySearch GEDCOM 7 and GEDZIP import with research records - Access-controlled sharing with other Nextcloud users - Responsive layout with multilingual interface ## Installation Install the signed official release from Nextcloud Apps. For developers/testers only, the source repository provides a Docker install.sh. ## Requirements - Nextcloud 35 - Hacesoft Shared App Core 0.18.8 or newer, installed and enabled ## Documentation https://github.com/hacesoft/FamilyTree</description>
+<description lang="cs"># Rodokmen Správa a sdílení rodinné historie na vlastním Nextcloudu bez zveřejňování osobních záznamů na externích službách. ## Funkce - Interaktivní rodokmeny, osoby, příbuzenské vztahy a události - Fotografie, dokumenty, prameny, citace a badatelské poznámky - Import FamilySearch GEDCOM 7 a GEDZIP - Sdílení s oprávněními pro další uživatele Nextcloudu - Responzivní vícejazyčné rozhraní ## Instalace Běžná instalace: podepsané oficiální vydání přímo přes Aplikace v Nextcloudu. Zdrojový skript install.sh je pouze pro vývojáře a testery Dockeru. ## Požadavky - Nextcloud 35 - Hacesoft Shared App Core 0.18.8 nebo novější ## Dokumentace https://github.com/hacesoft/FamilyTree</description>
+<description lang="de">Verwalten Sie die Geschichte Ihrer Familie in Ihrer eigenen Nextcloud-Instanz. Erstellen, erkunden und teilen Sie Stammbäume mit Bildern, Quellen und Forschungsnotizen. GEDCOM 7 und GEDZIP werden unterstützt.</description>
+<description lang="es">Guarde la historia familiar en su propio Nextcloud. Cree, explore y comparta árboles genealógicos con fotografías, fuentes y notas de investigación. Compatible con GEDCOM 7 y GEDZIP.</description>
+<description lang="fr">Conservez votre histoire familiale dans votre propre Nextcloud. Créez, explorez et partagez des arbres généalogiques avec photos, sources et notes de recherche. Import GEDCOM 7 et GEDZIP pris en charge.</description>
+<description lang="it">Conserva la storia della tua famiglia sul tuo Nextcloud. Crea, esplora e condividi alberi genealogici con foto, fonti e note di ricerca. Supporta GEDCOM 7 e GEDZIP.</description>
+<description lang="nl">Bewaar je familiegeschiedenis in je eigen Nextcloud. Maak, bekijk en deel stambomen met foto’s, bronnen en onderzoeksnotities. GEDCOM 7 en GEDZIP worden ondersteund.</description>
+<description lang="pl">Przechowuj historię rodziny we własnej instancji Nextcloud. Twórz, przeglądaj i udostępniaj drzewa genealogiczne ze zdjęciami, źródłami i notatkami badawczymi. Obsługuje GEDCOM 7 i GEDZIP.</description>
+<description lang="pt">Guarde a história da sua família no seu Nextcloud. Crie, explore e partilhe árvores genealógicas com fotografias, fontes e notas de investigação. Suporta GEDCOM 7 e GEDZIP.</description>
+<description lang="sk">Uchovávajte rodinnú históriu vo vlastnom Nextcloude. Vytvárajte, prezerajte a zdieľajte rodokmene s fotografiami, prameňmi a výskumnými poznámkami. Podporuje GEDCOM 7 a GEDZIP.</description>
+<description lang="uk">Зберігайте історію родини у власному Nextcloud. Створюйте, переглядайте та діліться родинними деревами з фотографіями, джерелами й дослідницькими нотатками. Підтримує GEDCOM 7 і GEDZIP.</description>
+<version>1.1.5</version>
+<licence>AGPL-3.0-or-later</licence>
+<author homepage="https://github.com/hacesoft">hacesoft</author>
+<namespace>HcFamilyTree</namespace>
+<category>organization</category>
+<website>https://github.com/hacesoft/familytree</website>
+<bugs>https://github.com/hacesoft/familytree/issues</bugs>
+<repository>https://github.com/hacesoft/familytree</repository>
+      
+<screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/01.png</screenshot>
+<screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/02.png</screenshot>
+<screenshot>https://raw.githubusercontent.com/hacesoft/familytree/main/screenshot/03.png</screenshot>
+      
+<documentation>
+<user>https://github.com/hacesoft/familytree</user>
+<admin>https://github.com/hacesoft/familytree</admin>
+<developer>https://github.com/hacesoft/familytree</developer>
+</documentation>
+<dependencies>
+<nextcloud min-version="35" max-version="35"/>
+</dependencies>
+<navigations>
+<navigation>
+<name>FamilyTree</name>
+<namespace>HcFamilyTree</namespace>
+<route>hc_familytree.page.index</route>
+<order>30</order>
+<icon>app.svg</icon>
+</navigation>
+</navigations>
 </info>
