@@ -77,7 +77,7 @@ https://github.com/hacesoft/familytree</description>
     <description lang="sk">Uchovávajte rodinnú históriu vo vlastnom Nextcloude. Vytvárajte, prezerajte a zdieľajte rodokmene s fotografiami, prameňmi a výskumnými poznámkami. Podporuje GEDCOM 7 a GEDZIP.</description>
     <description lang="uk">Зберігайте історію родини у власному Nextcloud. Створюйте, переглядайте та діліться родинними деревами з фотографіями, джерелами й дослідницькими нотатками. Підтримує GEDCOM 7 і GEDZIP.</description>
 
-    <version>1.1.5</version>
+    <version>1.1.6</version>
     <licence>AGPL-3.0-or-later</licence>
     <author homepage="https://github.com/hacesoft">hacesoft</author>
     <namespace>HcFamilyTree</namespace>

@@ -1,3 +1,9 @@
+## 1.1.6 – 2026-11-11
+
+- App Store screenshots are now separately hosted in the public repository root `screenshot/` folder and excluded from installation and source ZIP archives. Their original bytes remain unchanged.
+- The installed app still contains the original approved `img/app.svg`; release checks validate archive contents and exact public URL/approved-hash mapping.
+- No genealogy database, findings merge, or feature changes.
+
 ## 1.1.5 — 2026-11-10
 
 - New version-specific screenshot URLs (`01.png`, `02.png`, `03.png`) to request fresh Nextcloud App Store cache keys, preserving the exact image bytes.

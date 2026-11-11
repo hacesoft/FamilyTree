@@ -2615,8 +2615,8 @@ function closeModal() { cleanupModal(); oDialogController?.close('application');
  * @returns {unknown} Výsledek uvedené operace nebo informace o jejím dokončení.
  */
 const fnConfirmDialog=oOptions=>oCore.dialogs.confirm(oOptions);
-oCore.about.register({id:sAPP,name:fnTr("Family Tree"),version:oRoot.dataset.appVersion,repository:'https://github.com/hacesoft/FamilyTree',
-    releaseNotes:'https://github.com/hacesoft/FamilyTree/releases',documentation:'https://github.com/hacesoft/FamilyTree#readme',core:'>=0.18.8'});
+oCore.about.register({id:sAPP,name:fnTr("Family Tree"),version:oRoot.dataset.appVersion,repository:'https://github.com/hacesoft/familytree',
+    releaseNotes:'https://github.com/hacesoft/familytree/releases',documentation:'https://github.com/hacesoft/familytree#readme',core:'>=0.18.8'});
 //*****************************************************************************
 /**
  * @brief Popíše rodokmen item v uživatelském rozhraní FamilyTree.

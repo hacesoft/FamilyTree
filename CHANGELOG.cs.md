@@ -1,3 +1,9 @@
+## 1.1.6 – 2026-11-11
+
+- Screenshoty jsou nyní externě v kořenové složce `screenshot/` GitHubu a nejsou v běhové instalaci ani distribuovaných ZIPech. Metadata používají `screenshot/01.png` až `03.png`.
+- Schválená instalační ikona `img/app.svg` zůstává beze změny, doplněna kontrola SHA-256, struktury archivů a veřejných URL před publikací.
+- Beze změn rodokmenu, deníku, importu nálezů a databázového schématu.
+
 ## 1.1.5 – 2026-11-10
 
 - Nové názvy URL screenshotů (`01.png`, `02.png`, `03.png`) kvůli obnovení cache App Storu; obrazová data i schválené ikony jsou beze změny.

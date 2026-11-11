@@ -1,3 +1,10 @@
+## 1.1.6 – 2026-11-11
+
+- Schválené screenshoty `01.png`, `02.png`, `03.png` zůstanou výhradně v externí kořenové složce `screenshot/` na GitHubu. Změněny jen odkazy v `info.xml`, nikoli obsah obrázků.
+- Z veřejného zdrojového ZIPu a podepsané aplikace odstraněny screenshoty i nepotřebné doplňkové PNG; instalační ikona `img/app.svg` zůstává bitově nezměněná.
+- Kontrola sestavení vynucuje nepřítomnost screenshotů v archivech, platnou schválenou ikonu a přesné URL; samostatná online kontrola před podpisem ověřuje HTTPS dostupnost a SHA-256 vzdálených screenshotů.
+- Zachován slučovací import výzkumných nálezů, databáze a všechny ostatní funkce.
+
 ## 1.1.5 – 2026-11-10
 
 - Opraveno navázání screenshotů na obrazovou cache Nextcloud App Storu změnou veřejných názvů souborů (`01.png`, `02.png`, `03.png`); původní obsah obrázků zůstává bitově totožný.
